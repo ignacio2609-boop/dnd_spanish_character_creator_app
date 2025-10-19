@@ -20,7 +20,8 @@
     "@yousefkadah/vue-magic-ui": "1.0.1",
     "pinia": "3.0.3",
     "tailwindcss": "4.1.14",
-    "vue": "3.5.22"
+    "vue": "3.5.22",
+    "vue-router": "4.6.3"
   },
   "devDependencies": {
     "@tsconfig/node22": "22.0.2",
