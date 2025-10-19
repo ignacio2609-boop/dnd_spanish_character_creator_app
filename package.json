@@ -17,7 +17,6 @@
   },
   "dependencies": {
     "@tailwindcss/vite": "4.1.14",
-    "@yousefkadah/vue-magic-ui": "1.0.1",
     "pinia": "3.0.3",
     "tailwindcss": "4.1.14",
     "vue": "3.5.22",
@@ -41,3 +40,4 @@
     "vue-tsc": "3.1.1"
   }
 }
+
