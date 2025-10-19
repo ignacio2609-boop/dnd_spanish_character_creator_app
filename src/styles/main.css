@@ -1,0 +1,45 @@
+@import 'tailwindcss';
+
+@theme {
+  --color-blue-oxford: #00193a;
+  --color-blue-berkeley: #002b53;
+  --color-blue-indigo-dye: #023f73;
+  --color-blue-indigo-dye-light: #034780;
+  --color-red-falu: #7a0213;
+  --color-red-madder: #a10220;
+  --color-red-firebrick: #bf0a26;
+  --color-red-fire-engine: #cd0c2b;
+  --color-black-night: #131313;
+  --color-grey-eerie: #262626;
+
+  --color-white1: #ffffff;
+  --color-white2: #eee5e9;
+  --color-white3: #efeaf4;
+
+  --color-dark1: #3b1c32;
+  --color-dark2: #1c0521;
+  --color-dark3: #211a1d;
+
+  --color-warm1: #f87060;
+  --color-warm2: #e04b53;
+  --color-warm3: #ce254e;
+
+  --color-paper-border3: #a4844c;
+  --color-paper-border2: #efbb5c;
+  --color-paper-border1: #f4c670;
+
+  --color-paper-sheet: #f9d794;
+
+  --color-paper-gradient: linear-gradient(
+    90deg,
+    #a4844c 0%,
+    #e5a928 5%,
+    #efbb5c 10%,
+    #f9d794 50%,
+    #efbb5c 90%,
+    #e5a928 95%,
+    #a4844c 100%
+  );
+
+  --font-crimson: 'Crimson Text', serif;
+}
