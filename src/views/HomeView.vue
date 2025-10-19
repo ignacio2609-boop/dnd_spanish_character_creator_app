@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import PrimeButton from '@/components/prime_vue/PrimeButton.vue'
 </script>
 
 <template>
@@ -8,6 +9,7 @@
       Visit <a href="https://vuejs.org/" target="_blank" rel="noopener">vuejs.org</a> to read the
       documentation
     </p>
+    <PrimeButton />
     </div>
 </template>
 
