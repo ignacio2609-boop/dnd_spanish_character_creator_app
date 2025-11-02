@@ -1,5 +1,6 @@
 @import url('https://fonts.googleapis.com/css2?family=Crimson+Text&family=Playfair+Display&display=swap');
 @import 'tailwindcss';
+@import 'tailwindcss-primeui';
 
 @theme {
   --color-blue-oxford: #00193a;
