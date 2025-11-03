@@ -12,8 +12,10 @@ export {}
 declare module 'vue' {
   export interface GlobalComponents {
     Button: typeof import('primevue/button')['default']
+    InteractiveGridPattern: typeof import('./src/components/inspira_ui/InteractiveGridPattern.vue')['default']
     PrimeButton: typeof import('./src/components/prime_vue/PrimeButton.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
+    StarsBackground: typeof import('./src/components/inspira_ui/StarsBackground.vue')['default']
   }
 }
