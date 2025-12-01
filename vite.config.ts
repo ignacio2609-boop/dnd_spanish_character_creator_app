@@ -7,6 +7,7 @@ import tailwindcss from '@tailwindcss/vite'
 import Components from 'unplugin-vue-components/vite'
 import { PrimeVueResolver } from 'unplugin-vue-components/resolvers'
 import MotionResolver from 'motion-v/resolver'
+import { viteStaticCopy } from 'vite-plugin-static-copy'
 
 // https://vite.dev/config/
 export default defineConfig({
@@ -14,6 +15,9 @@ export default defineConfig({
     vue(),
     vueDevTools(),
     tailwindcss(),
+    viteStaticCopy({
+      targets: [{ src: 'node_modules/@3d-dice/dice-box/dist/assets/*', dest: 'assets/dice-box' }],
+    }),
     Components({
       resolvers: [PrimeVueResolver(), MotionResolver()],
     }),
