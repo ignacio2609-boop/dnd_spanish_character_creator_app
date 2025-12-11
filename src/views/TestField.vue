@@ -3,7 +3,9 @@ import PrimeButton from '@/components/prime_vue/PrimeButton.vue'
 import InteractiveGridPattern from '@/components/inspira_ui/InteractiveGridPattern.vue'
 import StarsBackground from '@/components/inspira_ui/StarsBackground.vue'
 import { initDiceBox, rollDice } from '@/composables/fantasticDiceConfig.ts'
-import { onMounted } from 'vue'
+import { onMounted, ref } from 'vue'
+import Header from '@/components/layout/Header.vue'
+import SideMenu from '@/components/layout/SideMenu.vue'
 
 onMounted(() => {
   initDiceBox()
@@ -12,9 +14,17 @@ onMounted(() => {
 const useRollDice = () => {
   rollDice()
 }
+
+const isDrawerVisible = ref(false)
+
+const toggleDrawer = () => {
+  isDrawerVisible.value = !isDrawerVisible.value
+}
 </script>
 
 <template>
+  <Header @show-drawer="toggleDrawer()" />
+  <SideMenu :visible="isDrawerVisible"/>
   <div class="flex flex-col p-4 gap-2">
     <p class="text-6xl font-bold text-gray-700 place-self-center m-8">
       Bienveniedo al campo de pruebas
