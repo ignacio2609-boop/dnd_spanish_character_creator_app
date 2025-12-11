@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import PrimeButton from '@/components/prime_vue/PrimeButton.vue'
-import router from '@/router'
+import router from '@/router/router.ts'
 
 const goToTestField = () => {
   router.push('/test-field')
