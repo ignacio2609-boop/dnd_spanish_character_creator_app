@@ -25,7 +25,8 @@ export default [
         ecmaVersion: 'latest',
         sourceType: 'module',
         projectService: true,
-      },
+        extraFileExtensions: ['.vue']
+      }
     },
     rules: {
       'vue/max-attributes-per-line': [
