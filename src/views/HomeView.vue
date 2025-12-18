@@ -1,18 +1,67 @@
 <script setup lang="ts">
-import PrimeButton from '@/components/prime_vue/PrimeButton.vue';
-import router from '@/router/router.ts';
+// Importamos los componentes de PrimeVue necesarios
+import Button from 'primevue/button';
+import { onMounted } from 'vue';
+import { initDiceBox, rollDice } from '@/composables/fantasticDiceConfig.ts';
 
-const goToTestField = () => {
-  router.push('/test-field');
-};
+onMounted(async () => {
+  try {
+    const diceBox = await initDiceBox();
+    if (diceBox) {
+      await rollDice();
+    }
+  } catch (error) {
+    globalThis.console.error('Error al inicializar DiceBox:', error);
+  }
+});
 </script>
 
 <template>
-  <div class="flex flex-col items-center justify-center gap-6">
-    <h1>You did it!</h1>
-    <p class="text-2xl font-bold text-gray-700">Estás en Home</p>
-    <PrimeButton label="Go to Test Field" @click="goToTestField()" />
-  </div>
+  <section class="flex flex-1 items-center justify-center overflow-hidden">
+    <div class="absolute inset-0 -z-10 overflow-hidden">
+      <div id="dice-box-container" class="flex h-full place-content-center" />
+      <!--      <img-->
+      <!--        src="https://images.unsplash.com/photo-1497366216548-37526070297c?q=80&w=2069&auto=format&fit=crop"-->
+      <!--        alt="Background office"-->
+      <!--        class="h-full w-full object-cover object-center"-->
+      <!--      />-->
+
+      <div class="absolute inset-0 bg-black/40 backdrop-blur-lg"></div>
+    </div>
+
+    <div
+      class="flex flex-col z-10 justify-center items-center max-w-4xl px-6 text-center gap-6 lg:px-8"
+    >
+      <h1 class="text-4xl font-extrabold text-white1 sm:text-6xl lg:text-7xl">
+        Creador de <span class="text-primary-400 block sm:inline">personajes D&D.</span>
+      </h1>
+
+      <p class="flex text-lg text-white2 p-8">
+        Una forma sencilla de crear tu personaje para tus partidas de Dungeons & Dragons. Diseñado
+        para agilizar el proceso y permitirte concentrarte en la aventura.
+      </p>
+
+      <div class="flex flex-col sm:flex-row items-center justify-center gap-4 sm:gap-x-6">
+        <Button
+          label="Empezar a crear"
+          size="large"
+          rounded
+          class="font-bold w-full sm:w-auto px-8 py-4"
+        />
+
+        <Button
+          label="Saber más"
+          icon="pi pi-arrow-right"
+          icon-pos="right"
+          severity="secondary"
+          variant="text"
+          size="large"
+          rounded
+          class="text-white hover:text-primary-300 w-full sm:w-auto"
+        />
+      </div>
+    </div>
+  </section>
 </template>
 
 <style scoped></style>

@@ -1,7 +1,7 @@
 // @ts-expect-error necessary to import the module
 import DiceBox from '@3d-dice/dice-box';
 
-let Box: DiceBox = null;
+let Box: DiceBox | null = null;
 
 const colors = [
   '#348888',
@@ -21,7 +21,7 @@ const getRandomColor = () => {
 };
 
 export const initDiceBox = async () => {
-  if (Box) return;
+  if (Box) return Box; // Retorna si ya está inicializado
 
   Box = new DiceBox({
     assetPath: '/assets/dice-box/',
@@ -35,16 +35,26 @@ export const initDiceBox = async () => {
     mass: 1,
     spinForce: 6,
   });
-  Box.init();
+
+  await Box.init(); // Espera a que se inicialice completamente
+  return Box; // Retorna el objeto inicializado
 };
 
 export const rollDice = async () => {
   if (!Box) {
     console.warn('Box no estaba inicializado, intentando inicializar ahora...');
-    // Fallback por si el DOM no está listo
     await initDiceBox();
   }
-  await Box.roll(['4d20', '4d12', '4d10', '4d8', '4d6', '4d4'], {
-    themeColor: getRandomColor(),
-  });
+
+  if (Box) {
+    await Box.roll(['4d20', '4d12', '4d10', '4d8', '4d6', '4d4'], {
+      themeColor: getRandomColor(),
+    });
+  }
+};
+
+export const clearDiceBox = () => {
+  if (Box && typeof Box.clear === 'function') {
+    Box.clear();
+  }
 };
