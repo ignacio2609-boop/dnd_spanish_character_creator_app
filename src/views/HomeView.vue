@@ -5,7 +5,7 @@ import { onMounted } from 'vue';
 import { initDiceBox, rollDice } from '@/composables/fantasticDiceConfig.ts';
 import router from '@/router/router.ts';
 
-onMounted(async () => {
+const initAndRollDice = async () => {
   try {
     const diceBox = await initDiceBox();
     if (diceBox) {
@@ -14,6 +14,10 @@ onMounted(async () => {
   } catch (error) {
     globalThis.console.error('Error al inicializar DiceBox:', error);
   }
+};
+
+onMounted(async () => {
+  await initAndRollDice();
 });
 
 const goToCreateCharacter = () => {
@@ -22,7 +26,7 @@ const goToCreateCharacter = () => {
 </script>
 
 <template>
-  <section class="flex flex-1 items-center justify-center overflow-hidden">
+  <section id="home-view" class="flex flex-1 items-center justify-center overflow-hidden">
     <div class="absolute inset-0 -z-10 overflow-hidden">
       <div id="dice-box-container" class="flex h-full place-content-center" />
       <div class="absolute inset-0 bg-black/40 backdrop-blur-md"></div>
