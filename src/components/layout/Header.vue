@@ -20,7 +20,7 @@ const showDrawer = () => {
       />
 
       <div class="absolute left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2">
-        <a href="#" class="block">
+        <a href="/home" class="block">
           <span class="sr-only">Your Company</span>
           <img
             class="h-8 w-auto"
