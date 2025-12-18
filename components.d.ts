@@ -15,6 +15,7 @@ declare module 'vue' {
     Footer: typeof import('./src/components/layout/Footer.vue')['default']
     Header: typeof import('./src/components/layout/Header.vue')['default']
     InteractiveGridPattern: typeof import('./src/components/inspira_ui/InteractiveGridPattern.vue')['default']
+    LoadingApp: typeof import('./src/components/UI/LoadingApp.vue')['default']
     MainLayout: typeof import('./src/components/layout/MainLayout.vue')['default']
     PrimeButton: typeof import('./src/components/prime_vue/PrimeButton.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
