@@ -1,10 +1,10 @@
 <script setup lang="ts">
-import PrimeButton from '@/components/prime_vue/PrimeButton.vue'
-import router from '@/router/router.ts'
+import PrimeButton from '@/components/prime_vue/PrimeButton.vue';
+import router from '@/router/router.ts';
 
 const goToTestField = () => {
-  router.push('/test-field')
-}
+  router.push('/test-field');
+};
 </script>
 
 <template>
@@ -14,7 +14,7 @@ const goToTestField = () => {
       Visit <a href="https://vuejs.org/" target="_blank" rel="noopener">vuejs.org</a> to read the
       documentation
     </p>
-    <PrimeButton @click="goToTestField()" label="Go to Test Field" />
+    <PrimeButton label="Go to Test Field" @click="goToTestField()" />
   </div>
 </template>
 
