@@ -3,6 +3,7 @@
 import Button from 'primevue/button';
 import { onMounted } from 'vue';
 import { initDiceBox, rollDice } from '@/composables/fantasticDiceConfig.ts';
+import router from '@/router/router.ts';
 
 onMounted(async () => {
   try {
@@ -14,13 +15,17 @@ onMounted(async () => {
     globalThis.console.error('Error al inicializar DiceBox:', error);
   }
 });
+
+const goToCreateCharacter = () => {
+  router.push('/character-creator');
+};
 </script>
 
 <template>
   <section class="flex flex-1 items-center justify-center overflow-hidden">
     <div class="absolute inset-0 -z-10 overflow-hidden">
       <div id="dice-box-container" class="flex h-full place-content-center" />
-      <div class="absolute inset-0 bg-black/40 backdrop-blur-lg"></div>
+      <div class="absolute inset-0 bg-black/40 backdrop-blur-md"></div>
     </div>
 
     <div
@@ -41,6 +46,7 @@ onMounted(async () => {
           size="large"
           rounded
           class="font-bold w-full sm:w-auto px-8 py-4"
+          @click="goToCreateCharacter()"
         />
 
         <Button
