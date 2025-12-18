@@ -1,33 +1,37 @@
 import eslint from '@eslint/js';
 import vue from 'eslint-plugin-vue';
 import tseslint from 'typescript-eslint';
-import skipFormatting from '@vue/eslint-config-prettier/skip-formatting';
+import vueParser from 'vue-eslint-parser';
 
 export default [
-  {
-    ignores: [
-      '**/dist/**',
-      '**/dist-ssr/**',
-      '**/coverage/**',
-      '**/node_modules/**',
-      '*.config.js',
-    ],
-  },
   eslint.configs.recommended,
   ...vue.configs['flat/recommended'],
   ...tseslint.configs.recommended,
-  skipFormatting,
   {
-    files: ['**/*.{ts,mts,tsx,vue}'],
+    files: ['**/*.vue'],
+    languageOptions: {
+      parser: vueParser,
+      parserOptions: {
+        parser: tseslint.parser,
+        ecmaVersion: 'latest',
+        sourceType: 'module',
+        projectService: true,
+        extraFileExtensions: ['.vue'],
+      },
+    },
+  },
+  {
+    files: ['**/*.ts', '**/*.tsx'],
     languageOptions: {
       parser: tseslint.parser,
       parserOptions: {
         ecmaVersion: 'latest',
         sourceType: 'module',
         projectService: true,
-        extraFileExtensions: ['.vue']
-      }
+      },
     },
+  },
+  {
     rules: {
       'vue/max-attributes-per-line': [
         'error',
@@ -58,5 +62,8 @@ export default [
       '@typescript-eslint/consistent-type-imports': 'error',
       '@typescript-eslint/no-explicit-any': 'warn',
     },
+  },
+  {
+    ignores: ['node_modules/', 'dist/', '*.config.js'],
   },
 ];
