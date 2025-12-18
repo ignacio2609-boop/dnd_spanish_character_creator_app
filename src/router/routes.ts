@@ -15,11 +15,27 @@ const routes: RouteRecordRaw[] = [
         name: 'Home',
         component: () => import('@/views/HomeView.vue'),
       },
-      { path: 'test-field', name: 'TestField', component: () => import('@/views/TestField.vue') },
+      { path: 'test-field',
+        name: 'TestField',
+        component: () => import('@/views/TestField.vue')
+      },
+      {
+        path: 'explicamelus',
+        name: 'Explicamelus',
+        component: () => import('@/views/InformationView.vue')
+      },
+      {
+        path: 'about',
+        name: 'About',
+        component: () => import('@/views/CreditsView.vue'),
+      },
+      {
+        path: 'character-creator',
+        name: 'CharacterCreator',
+        component: () => import('@/views/CreatorView.vue'),
+      },
     ],
   },
-  // Añade más rutas aquí
-  { path: '/test-field', name: 'TestField', component: () => import('@/views/TestField.vue') },
   // ==================================
   // NOT FOUND - Siempre al final
   // ==================================
