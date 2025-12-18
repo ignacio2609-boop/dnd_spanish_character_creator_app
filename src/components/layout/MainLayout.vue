@@ -17,7 +17,7 @@ const toggleDrawer = () => {
 
     <SideMenu v-model:visible="isDrawerVisible" />
 
-    <main class="flex-1 w-full mx-4 my-8">
+    <main class="flex-1 mx-4 my-8">
       <router-view v-slot="{ Component }">
         <Transition name="fade" mode="out-in">
           <component :is="Component" />
