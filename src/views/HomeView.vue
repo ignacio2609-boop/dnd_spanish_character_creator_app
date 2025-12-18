@@ -20,12 +20,6 @@ onMounted(async () => {
   <section class="flex flex-1 items-center justify-center overflow-hidden">
     <div class="absolute inset-0 -z-10 overflow-hidden">
       <div id="dice-box-container" class="flex h-full place-content-center" />
-      <!--      <img-->
-      <!--        src="https://images.unsplash.com/photo-1497366216548-37526070297c?q=80&w=2069&auto=format&fit=crop"-->
-      <!--        alt="Background office"-->
-      <!--        class="h-full w-full object-cover object-center"-->
-      <!--      />-->
-
       <div class="absolute inset-0 bg-black/40 backdrop-blur-lg"></div>
     </div>
 
