@@ -23,6 +23,9 @@ onMounted(async () => {
 const goToCreateCharacter = () => {
   router.push('/character-creator');
 };
+const goToAbout = () => {
+  router.push('/about');
+};
 </script>
 
 <template>
@@ -62,6 +65,7 @@ const goToCreateCharacter = () => {
           size="large"
           rounded
           class="text-white hover:text-primary-300 w-full sm:w-auto"
+          @click="goToAbout()"
         />
       </div>
     </div>
