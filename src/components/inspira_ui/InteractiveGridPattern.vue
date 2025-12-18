@@ -19,12 +19,12 @@
 </template>
 
 <script lang="ts" setup>
-import { cn } from "@/utils/cn.ts";
-import { ref, computed, type HTMLAttributes } from "vue";
+import { cn } from '@/utils/cn.ts';
+import { ref, computed, type HTMLAttributes } from 'vue';
 
 interface InteractiveGridPatternProps {
-  className?: HTMLAttributes["class"];
-  squaresClassName?: HTMLAttributes["class"];
+  className?: HTMLAttributes['class'];
+  squaresClassName?: HTMLAttributes['class'];
   width?: number;
   height?: number;
   squares?: [number, number];
@@ -55,13 +55,13 @@ function getY(index: number) {
 }
 
 const svgClass = computed(() =>
-  cn("absolute inset-0 h-full w-full border border-gray-400/30", props.className),
+  cn('absolute inset-0 h-full w-full border border-gray-400/30', props.className),
 );
 
 function getRectClass(index: number) {
   return cn(
-    "stroke-gray-400/30 transition-all duration-100 ease-in-out [&:not(:hover)]:duration-1000",
-    hoveredSquare.value === index ? "fill-gray-300/30" : "fill-transparent",
+    'stroke-gray-400/30 transition-all duration-100 ease-in-out [&:not(:hover)]:duration-1000',
+    hoveredSquare.value === index ? 'fill-gray-300/30' : 'fill-transparent',
     props.squaresClassName,
   );
 }

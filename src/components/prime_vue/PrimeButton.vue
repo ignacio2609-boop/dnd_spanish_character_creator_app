@@ -4,7 +4,7 @@ defineProps({
   label: {
     type: String,
     default: 'Click Me'
-  }})
+  }});
 </script>
 
 <template>

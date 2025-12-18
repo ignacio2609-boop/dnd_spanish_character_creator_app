@@ -1,9 +1,9 @@
 <script setup lang="ts">
 // Definimos props para hacer el componente reutilizable
 interface Props {
-  text?: string
-  color?: string
-};
+  text?: string;
+  color?: string;
+}
 
 // Valores por defecto
 withDefaults(defineProps<Props>(), {
@@ -29,5 +29,4 @@ withDefaults(defineProps<Props>(), {
   </div>
 </template>
 
-<style scoped>
-</style>
+<style scoped></style>

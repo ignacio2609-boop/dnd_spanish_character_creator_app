@@ -15,14 +15,11 @@ const routes: RouteRecordRaw[] = [
         name: 'Home',
         component: () => import('@/views/HomeView.vue'),
       },
-      { path: 'test-field',
-        name: 'TestField',
-        component: () => import('@/views/TestField.vue')
-      },
+      { path: 'test-field', name: 'TestField', component: () => import('@/views/TestField.vue') },
       {
         path: 'explicamelus',
         name: 'Explicamelus',
-        component: () => import('@/views/InformationView.vue')
+        component: () => import('@/views/InformationView.vue'),
       },
       {
         path: 'about',

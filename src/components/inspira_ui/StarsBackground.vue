@@ -88,10 +88,10 @@
 </template>
 
 <script setup lang="ts">
-import type { SpringOptions } from "motion-v";
-import { cn } from "@/utils/cn.ts";
-import { motion, useMotionValue, useSpring } from "motion-v";
-import { computed, onMounted, ref, watch } from "vue";
+import type { SpringOptions } from 'motion-v';
+import { cn } from '@/utils/cn.ts';
+import { motion, useMotionValue, useSpring } from 'motion-v';
+import { computed, onMounted, ref, watch } from 'vue';
 
 interface StarsBackgroundProps {
   factor?: number;
@@ -105,7 +105,7 @@ const props = withDefaults(defineProps<StarsBackgroundProps>(), {
   factor: 0.05,
   speed: 50,
   transition: () => ({ stiffness: 50, damping: 20 }),
-  starColor: "#fff",
+  starColor: '#fff',
 });
 
 // For slot content
@@ -118,7 +118,7 @@ function generateStars(count: number, starColor: string) {
     const y = Math.floor(Math.random() * 4000) - 2000;
     shadows.push(`${x}px ${y}px ${starColor}`);
   }
-  return shadows.join(", ");
+  return shadows.join(', ');
 }
 
 const offsetX = useMotionValue(1);
@@ -136,9 +136,9 @@ function handleMouseMove(e: MouseEvent) {
   offsetY.set(newOffsetY);
 }
 
-const boxShadow1 = ref("");
-const boxShadow2 = ref("");
-const boxShadow3 = ref("");
+const boxShadow1 = ref('');
+const boxShadow2 = ref('');
+const boxShadow3 = ref('');
 
 onMounted(() => {
   boxShadow1.value = generateStars(1000, props.starColor);
@@ -159,18 +159,18 @@ watch(
 const starLayer1Transition = computed(() => ({
   repeat: Infinity,
   duration: props.speed,
-  ease: "linear",
+  ease: 'linear',
 }));
 
 const starLayer2Transition = computed(() => ({
   repeat: Infinity,
   duration: props.speed * 2,
-  ease: "linear",
+  ease: 'linear',
 }));
 
 const starLayer3Transition = computed(() => ({
   repeat: Infinity,
   duration: props.speed * 3,
-  ease: "linear",
+  ease: 'linear',
 }));
 </script>
