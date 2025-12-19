@@ -2,7 +2,7 @@ import { fileURLToPath, URL } from 'node:url';
 
 import { defineConfig } from 'vite';
 import vue from '@vitejs/plugin-vue';
-import vueDevTools from 'vite-plugin-vue-devtools';
+// import vueDevTools from 'vite-plugin-vue-devtools';
 import tailwindcss from '@tailwindcss/vite';
 import Components from 'unplugin-vue-components/vite';
 import { PrimeVueResolver } from 'unplugin-vue-components/resolvers';
@@ -13,7 +13,7 @@ import { viteStaticCopy } from 'vite-plugin-static-copy';
 export default defineConfig({
   plugins: [
     vue(),
-    vueDevTools(),
+    // vueDevTools(), // Desactivado para no mostrar las DevTools
     tailwindcss(),
     viteStaticCopy({
       targets: [{ src: 'node_modules/@3d-dice/dice-box/dist/assets/*', dest: 'assets/dice-box' }],
