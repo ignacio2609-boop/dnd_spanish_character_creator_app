@@ -28,43 +28,45 @@ const initAndRollDice = async () => {
   <div id="creator-view" class="flex flex-1 w-full bg-gradient-to-br from-surface-50/50 via-surface-0/30 to-surface-100/40 dark:from-surface-950/50 dark:via-surface-900/30 dark:to-surface-950/40 rounded-4xl">
     <div class="flex flex-col lg:flex-row w-full gap-6 p-4 lg:p-8">
       <!-- Sección principal del formulario -->
-      <div class="flex flex-col flex-1 gap-6">
-        <!-- Header con diseño mejorado -->
-        <div class="flex flex-col gap-4 p-6 bg-gradient-to-br from-primary-50 to-primary-100 dark:from-primary-950 dark:to-primary-900 rounded-2xl border-2 border-primary-200 dark:border-primary-800">
-          <div class="flex items-center gap-4">
-            <div class="flex items-center justify-center w-16 h-16 bg-primary-500 rounded-xl shadow-lg">
-              <i class="pi pi-users text-3xl text-white"></i>
+      <div class="flex flex-col flex-1 gap-4">
+        <!-- Header con diseño mejorado y más compacto -->
+        <div class="flex flex-col gap-3 p-4 bg-gradient-to-br from-primary-50 to-primary-100 dark:from-primary-950 dark:to-primary-900 rounded-xl border border-primary-200 dark:border-primary-800">
+          <div class="flex items-center justify-between gap-3">
+            <div class="flex items-center gap-3">
+              <div class="flex items-center justify-center w-12 h-12 bg-primary-500 rounded-lg shadow-md">
+                <i class="pi pi-users text-2xl text-white"></i>
+              </div>
+              <div class="flex flex-col">
+                <h1 class="text-2xl lg:text-3xl font-bold text-primary-900 dark:text-primary-50">
+                  Creador de Personajes D&D
+                </h1>
+                <p class="text-xs text-primary-700 dark:text-primary-300 font-medium">
+                  Dungeons & Dragons 5ª Edición
+                </p>
+              </div>
             </div>
-            <div class="flex flex-col">
-              <h1 class="text-3xl lg:text-4xl font-extrabold text-primary-900 dark:text-primary-50">
-                Creador de Personajes D&D
-              </h1>
-              <p class="text-sm text-primary-700 dark:text-primary-300 font-semibold">
-                Dungeons & Dragons 5ª Edición
-              </p>
+
+            <!-- Características destacadas - Solo íconos en desktop -->
+            <div class="hidden lg:flex items-center gap-2">
+              <div class="flex items-center gap-1.5 px-2.5 py-1 bg-white/50 dark:bg-black/20 rounded-full backdrop-blur-sm">
+                <i class="pi pi-check-circle text-green-600 dark:text-green-400 text-xs"></i>
+                <span class="text-xs font-semibold text-primary-900 dark:text-primary-50">PDF</span>
+              </div>
+              <div class="flex items-center gap-1.5 px-2.5 py-1 bg-white/50 dark:bg-black/20 rounded-full backdrop-blur-sm">
+                <i class="pi pi-sync text-blue-600 dark:text-blue-400 text-xs"></i>
+                <span class="text-xs font-semibold text-primary-900 dark:text-primary-50">Dados 3D</span>
+              </div>
+              <div class="flex items-center gap-1.5 px-2.5 py-1 bg-white/50 dark:bg-black/20 rounded-full backdrop-blur-sm">
+                <i class="pi pi-calculator text-purple-600 dark:text-purple-400 text-xs"></i>
+                <span class="text-xs font-semibold text-primary-900 dark:text-primary-50">Auto</span>
+              </div>
             </div>
           </div>
 
-          <p class="text-base lg:text-lg text-primary-800 dark:text-primary-200 leading-relaxed">
-            Bienvenido al creador de personajes para Dungeons & Dragons. Crea y personaliza tu héroe
-            paso a paso, desde sus estadísticas hasta sus hechizos. ¡Tu aventura comienza aquí!
+          <!-- Descripción más breve -->
+          <p class="text-sm text-primary-800 dark:text-primary-200 leading-snug">
+            Crea y personaliza tu personaje paso a paso. ¡Tu aventura comienza aquí!
           </p>
-
-          <!-- Características destacadas -->
-          <div class="flex flex-wrap gap-3 pt-2">
-            <div class="flex items-center gap-2 px-3 py-1.5 bg-white/50 dark:bg-black/20 rounded-full backdrop-blur-sm">
-              <i class="pi pi-check-circle text-green-600 dark:text-green-400 text-sm"></i>
-              <span class="text-sm font-semibold text-primary-900 dark:text-primary-50">Generación de PDF</span>
-            </div>
-            <div class="flex items-center gap-2 px-3 py-1.5 bg-white/50 dark:bg-black/20 rounded-full backdrop-blur-sm">
-              <i class="pi pi-sync text-blue-600 dark:text-blue-400 text-sm"></i>
-              <span class="text-sm font-semibold text-primary-900 dark:text-primary-50">Tirada de dados 3D</span>
-            </div>
-            <div class="flex items-center gap-2 px-3 py-1.5 bg-white/50 dark:bg-black/20 rounded-full backdrop-blur-sm">
-              <i class="pi pi-calculator text-purple-600 dark:text-purple-400 text-sm"></i>
-              <span class="text-sm font-semibold text-primary-900 dark:text-primary-50">Cálculos automáticos</span>
-            </div>
-          </div>
         </div>
 
         <!-- Formulario -->
