@@ -17,7 +17,7 @@ onBeforeMount(async () => {
 
 const initAndRollDice = async () => {
   try {
-    await rollDiceWithExpression(['1d20', '2d6']);
+    await rollDiceWithExpression(['4d6']);
   } catch (error) {
     globalThis.console.error('Error al inicializar DiceBox:', error);
   }
@@ -35,11 +35,10 @@ const initAndRollDice = async () => {
         </p>
         <CharacterCreatorForm @use-roll-dice="initAndRollDice" />
       </div>
-      <div class="flex flex-col w-full gap-1">
-        <div class="flex h-full w-full rounded-4xl p-2 inspira-theme">
+      <div class="flex items-center-safe w-full gap-1">
+        <div class="flex w-full rounded-4xl p-2 inspira-theme">
           <DiceContainer />
         </div>
-        <div class="flex h-full w-full rounded-4xl p-2"></div>
       </div>
     </div>
   </div>

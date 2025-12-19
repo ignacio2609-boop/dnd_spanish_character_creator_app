@@ -85,3 +85,4 @@ export const patternBackgroundMaskVariants = cva('bg-background', {
 export type PatternBackgroundMaskVariants = VariantProps<typeof patternBackgroundMaskVariants>;
 
 export { default as PatternBackground } from '@/components/inspira_ui/PatternBackground.vue';
+export { default as RainbowButton } from '@/components/inspira_ui/RainbowButton.vue';

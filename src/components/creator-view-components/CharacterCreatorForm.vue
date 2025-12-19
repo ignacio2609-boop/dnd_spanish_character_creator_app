@@ -6,9 +6,10 @@ import StepPanel from 'primevue/steppanel';
 import Button from 'primevue/button';
 import InputText from 'primevue/inputtext';
 import InputNumber from 'primevue/inputnumber';
-import Select from 'primevue/select';
+import Dropdown from 'primevue/dropdown';
 import Checkbox from 'primevue/checkbox';
-import { useCharacterStore, ALL_SKILLS, type SkillKey } from '@/stores/characterStore.ts';
+import { RainbowButton } from '@/components/inspira_ui';
+import { useCharacterStore, ALL_SKILLS, type SkillKey, type StatKey } from '@/stores/characterStore.ts';
 import { ref } from 'vue';
 import { pdfService } from '@/services/PdfService.ts';
 
@@ -144,13 +145,19 @@ defineEmits(['useRollDice']);
                   class="w-full"
                 />
               </div>
-              <div class="field">
-                <label>Nombre del Jugador</label>
-                <input
+
+              <div class="flex flex-col gap-2">
+                <label
+                  for="player-name"
+                  class="font-semibold text-surface-700 dark:text-surface-200"
+                >
+                  Nombre del Jugador
+                </label>
+                <InputText
+                  id="player-name"
                   v-model="characterStore.concept.playerName"
-                  type="text"
                   placeholder="Tu nombre real"
-                  class="p-inputtext p-component"
+                  class="w-full"
                 />
               </div>
 
@@ -210,9 +217,15 @@ defineEmits(['useRollDice']);
             </h3>
 
             <div class="flex flex-col gap-4">
-              <div class="field">
-                <label>Raza</label>
+              <div class="flex flex-col gap-2">
+                <label
+                  for="character-race"
+                  class="font-semibold text-surface-700 dark:text-surface-200"
+                >
+                  Raza
+                </label>
                 <Dropdown
+                  id="character-race"
                   v-model="characterStore.background.race"
                   :options="raceOptions"
                   option-label="label"
@@ -223,9 +236,15 @@ defineEmits(['useRollDice']);
                 />
               </div>
 
-              <div class="field">
-                <label>Trasfondo</label>
+              <div class="flex flex-col gap-2">
+                <label
+                  for="character-background"
+                  class="font-semibold text-surface-700 dark:text-surface-200"
+                >
+                  Trasfondo (Background)
+                </label>
                 <Dropdown
+                  id="character-background"
                   v-model="characterStore.background.backgroundName"
                   :options="backgroundOptions"
                   option-label="label"
@@ -236,9 +255,15 @@ defineEmits(['useRollDice']);
                 />
               </div>
 
-              <div class="field">
-                <label>Alineamiento</label>
+              <div class="flex flex-col gap-2">
+                <label
+                  for="character-alignment"
+                  class="font-semibold text-surface-700 dark:text-surface-200"
+                >
+                  Alineamiento
+                </label>
                 <Dropdown
+                  id="character-alignment"
                   v-model="characterStore.background.alignment"
                   :options="alignmentOptions"
                   option-label="label"
@@ -248,22 +273,22 @@ defineEmits(['useRollDice']);
                 />
               </div>
             </div>
+          </div>
 
-            <div class="flex justify-start gap-4 p-6">
-              <Button
-                label="Atrás"
-                icon="pi pi-arrow-left"
-                severity="secondary"
-                outlined
-                @click="activateCallback(1)"
-              />
-              <Button
-                label="Siguiente"
-                icon="pi pi-arrow-right"
-                icon-pos="right"
-                @click="activateCallback(3)"
-              />
-            </div>
+          <div class="flex justify-start gap-4 p-6">
+            <Button
+              label="Atrás"
+              icon="pi pi-arrow-left"
+              severity="secondary"
+              outlined
+              @click="activateCallback(1)"
+            />
+            <Button
+              label="Siguiente"
+              icon="pi pi-arrow-right"
+              icon-pos="right"
+              @click="activateCallback(3)"
+            />
           </div>
         </StepPanel>
       </StepItem>
@@ -273,54 +298,108 @@ defineEmits(['useRollDice']);
         <Step>Estadísticas</Step>
         <StepPanel v-slot="{ activateCallback }" class="rounded-2xl">
           <div class="flex flex-col w-full gap-6 p-6 bg-surface-50 dark:bg-surface-900 rounded-xl">
-            <h3 class="text-2xl font-bold text-surface-900 dark:text-surface-50">
-              Atributos del Personaje
-            </h3>
+            <div class="flex flex-col gap-4">
+              <h3 class="text-2xl font-bold text-surface-900 dark:text-surface-50">
+                Atributos del Personaje
+              </h3>
 
-            <div class="grid-container">
-              <div v-for="(label, key) in statLabels" :key="key" class="stat-card">
-                <h4 class="stat-title">{{ label.toUpperCase() }}</h4>
+              <div class="flex flex-col gap-3 p-4 bg-primary-50 dark:bg-primary-950 border-l-4 border-primary-500 rounded-lg">
+                <h4 class="font-bold text-primary-900 dark:text-primary-100 mb-2">
+                  ¿Cómo generar tus estadísticas?
+                </h4>
+                <div class="text-sm text-primary-800 dark:text-primary-200 space-y-2">
+                  <p>
+                    <strong>Opción 1 - Tirada de dados (4d6):</strong> Haz clic en el botón para tirar 4 dados de 6 caras por cada atributo.
+                    Tradicionalmente se descartan los valores más bajos y se suman los 3 más altos.
+                  </p>
+                  <p>
+                    <strong>Opción 2 - Valores estándar:</strong> Distribuye estos valores como prefieras: 15, 14, 13, 12, 10, 8.
+                  </p>
+                </div>
+              </div>
 
-                <div class="stat-body">
-                  <div class="input-wrapper">
+              <div class="flex justify-center">
+                <RainbowButton
+                  class="!h-auto !px-8 !py-4"
+                  :speed="3"
+                  @click="$emit('useRollDice')"
+                >
+                  <span class="flex items-center gap-3 text-lg font-bold text-white dark:text-black">
+                    <i class="pi pi-sync text-xl"></i>
+                    Tirar 4d6
+                  </span>
+                </RainbowButton>
+              </div>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+              <div
+                v-for="(label, key) in statLabels"
+                :key="key"
+                class="flex flex-col gap-3 p-4 bg-white dark:bg-surface-800 rounded-lg border border-surface-200 dark:border-surface-700"
+              >
+                <h4
+                  class="text-sm font-bold text-center text-surface-600 dark:text-surface-300 uppercase"
+                >
+                  {{ label }}
+                </h4>
+
+                <div class="flex items-center gap-3">
+                  <div class="flex-1">
                     <InputNumber
-                      v-model="characterStore.stats[key]"
+                      v-model="characterStore.stats[key as StatKey]"
                       show-buttons
                       button-layout="vertical"
                       :min="1"
                       :max="30"
-                      class="stat-input"
+                      class="w-full"
                     />
-                    <div class="mod-display">
-                      {{ characterStore.modifiers[key] >= 0 ? '+' : ''
-                      }}{{ characterStore.modifiers[key] }}
-                    </div>
                   </div>
+                  <div
+                    class="flex flex-col items-center justify-center min-w-[60px] h-[60px] bg-primary-100 dark:bg-primary-900 rounded-lg"
+                  >
+                    <span class="text-xs text-primary-600 dark:text-primary-400">Mod</span>
+                    <span class="text-xl font-bold text-primary-700 dark:text-primary-300">
+                      {{ characterStore.modifiers[key as StatKey] >= 0 ? '+' : ''
+                      }}{{ characterStore.modifiers[key as StatKey] }}
+                    </span>
+                  </div>
+                </div>
 
-                  <div class="save-check">
-                    <Checkbox
-                      v-model="characterStore.savingThrows[key]"
-                      :binary="true"
-                      :input-id="key + '-save'"
-                    />
-                    <label :for="key + '-save'">Salvación</label>
-                  </div>
+                <div
+                  class="flex items-center gap-2 pt-2 border-t border-surface-200 dark:border-surface-700"
+                >
+                  <Checkbox
+                    v-model="characterStore.savingThrows[key as StatKey]"
+                    :binary="true"
+                    :input-id="key + '-save'"
+                  />
+                  <label
+                    :for="key + '-save'"
+                    class="text-sm text-surface-700 dark:text-surface-300 cursor-pointer"
+                  >
+                    Salvación
+                  </label>
                 </div>
               </div>
             </div>
 
-            <div class="vitality-row">
-              <div class="field">
-                <label>Puntos de Golpe Máx. (HP)</label>
-                <InputNumber v-model="characterStore.combat.hpMax" />
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 pt-4">
+              <div class="flex flex-col gap-2">
+                <label for="hp-max" class="font-semibold text-surface-700 dark:text-surface-200">
+                  Puntos de Golpe Máx. (HP)
+                </label>
+                <InputNumber id="hp-max" v-model="characterStore.combat.hpMax" class="w-full" />
               </div>
-              <div class="field">
-                <label>Dados de Golpe (Total)</label>
-                <input
+              <div class="flex flex-col gap-2">
+                <label for="hit-dice" class="font-semibold text-surface-700 dark:text-surface-200">
+                  Dados de Golpe (Total)
+                </label>
+                <InputText
+                  id="hit-dice"
                   v-model="characterStore.combat.hitDiceTotal"
-                  type="text"
-                  class="p-inputtext p-component"
                   placeholder="Ej: 1d8"
+                  class="w-full"
                 />
               </div>
             </div>
@@ -356,21 +435,37 @@ defineEmits(['useRollDice']);
               Marca las habilidades en las que tu personaje es competente
             </p>
 
-            <div
-              v-for="key in ALL_SKILLS"
-              :key="key"
-              class="skill-item"
-              :class="{ 'is-active': characterStore.skills[key] }"
-            >
-              <div class="skill-check">
-                <Checkbox v-model="characterStore.skills[key]" :binary="true" :inputId="key" />
-                <label :for="key" class="skill-label">{{ skillLabels[key] }}</label>
-              </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+              <div
+                v-for="key in ALL_SKILLS"
+                :key="key"
+                class="flex items-center justify-between gap-3 p-3 bg-white dark:bg-surface-800 rounded-lg border border-surface-200 dark:border-surface-700 transition-all"
+                :class="{
+                  'border-primary-500 dark:border-primary-400 bg-primary-50 dark:bg-primary-950':
+                    characterStore.skills[key],
+                }"
+              >
+                <div class="flex items-center gap-3 flex-1">
+                  <Checkbox
+                    v-model="characterStore.skills[key]"
+                    :binary="true"
+                    :input-id="key"
+                  />
+                  <label
+                    :for="key"
+                    class="font-semibold text-surface-700 dark:text-surface-200 cursor-pointer"
+                  >
+                    {{ skillLabels[key] }}
+                  </label>
+                </div>
 
-              <div class="skill-value">
                 <span
-                  class="p-tag"
-                  :class="characterStore.skills[key] ? 'p-tag-success' : 'p-tag-secondary'"
+                  class="inline-flex items-center justify-center min-w-[48px] px-2 py-1 text-sm font-bold rounded-md"
+                  :class="
+                    characterStore.skills[key]
+                      ? 'bg-green-100 dark:bg-green-900 text-green-700 dark:text-green-300'
+                      : 'bg-surface-200 dark:bg-surface-700 text-surface-600 dark:text-surface-400'
+                  "
                 >
                   {{ characterStore.skillBonuses[key] >= 0 ? '+' : ''
                   }}{{ characterStore.skillBonuses[key] }}
@@ -451,15 +546,41 @@ defineEmits(['useRollDice']);
         <StepPanel v-slot="{ activateCallback }" class="rounded-2xl">
           <div class="flex flex-col w-full gap-6 p-6 bg-surface-50 dark:bg-surface-900 rounded-xl">
             <div class="flex flex-col items-center justify-center gap-6 py-8">
-              <div class="success-icon">
-                <i class="pi pi-file-pdf" style="font-size: 3rem; color: var(--primary-color)"></i>
+              <div
+                class="flex items-center justify-center w-20 h-20 bg-green-100 dark:bg-green-900 rounded-full"
+              >
+                <i class="pi pi-check text-4xl text-green-600 dark:text-green-400"></i>
               </div>
-              <h3>¡Personaje Listo!</h3>
-              <p>Hemos calculado tus modificadores, competencias y organizado tu magia.</p>
 
-              <div class="summary">
-                <p><strong>Nombre:</strong> {{ characterStore.concept.name || 'Sin nombre' }}</p>
-                <p><strong>Clase:</strong> {{ characterStore.concept.class || 'Aventurero' }}</p>
+              <h3 class="text-3xl font-bold text-surface-900 dark:text-surface-50 text-center">
+                ¡Personaje Listo!
+              </h3>
+
+              <p class="text-lg text-surface-600 dark:text-surface-400 text-center max-w-md">
+                Hemos calculado tus modificadores, competencias y organizado tu magia.
+              </p>
+
+              <div
+                class="flex flex-col gap-3 p-6 bg-white dark:bg-surface-800 rounded-lg border border-surface-200 dark:border-surface-700 w-full max-w-md"
+              >
+                <div class="flex justify-between items-center">
+                  <span class="font-semibold text-surface-700 dark:text-surface-300">Nombre:</span>
+                  <span class="text-surface-900 dark:text-surface-50">
+                    {{ characterStore.concept.name || 'Sin nombre' }}
+                  </span>
+                </div>
+                <div class="flex justify-between items-center">
+                  <span class="font-semibold text-surface-700 dark:text-surface-300">Clase:</span>
+                  <span class="text-surface-900 dark:text-surface-50">
+                    {{ characterStore.concept.class || 'Aventurero' }}
+                  </span>
+                </div>
+                <div class="flex justify-between items-center">
+                  <span class="font-semibold text-surface-700 dark:text-surface-300">Nivel:</span>
+                  <span class="text-surface-900 dark:text-surface-50">
+                    {{ characterStore.concept.level }}
+                  </span>
+                </div>
               </div>
 
               <Button

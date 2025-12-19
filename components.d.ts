@@ -23,6 +23,7 @@ declare module 'vue' {
     PatternBackground: typeof import('./src/components/inspira_ui/PatternBackground.vue')['default']
     PdfInspector: typeof import('./src/components/PdfInspector.vue')['default']
     PrimeButton: typeof import('./src/components/prime_vue/PrimeButton.vue')['default']
+    RainbowButton: typeof import('./src/components/inspira_ui/RainbowButton.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
     SideMenu: typeof import('./src/components/layout/SideMenu.vue')['default']
