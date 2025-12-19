@@ -2,7 +2,7 @@
 // Importamos los componentes de PrimeVue necesarios
 import Button from 'primevue/button';
 import { onBeforeMount, onMounted } from 'vue';
-import { destroyDiceBox, initDiceBox, rollDice } from '@/composables/fantasticDiceConfig.ts';
+import { destroyDiceBox, rollDice } from '@/composables/fantasticDiceConfig.ts';
 import router from '@/router/router.ts';
 
 onBeforeMount(async () => {
