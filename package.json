@@ -17,6 +17,7 @@
   },
   "dependencies": {
     "@3d-dice/dice-box": "1.1.4",
+    "@3d-dice/dice-ui": "^0.5.2",
     "@primeuix/themes": "2.0.1",
     "@tailwindcss/vite": "4.1.14",
     "@vueuse/core": "14.1.0",
