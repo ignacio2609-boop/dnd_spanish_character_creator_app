@@ -16,6 +16,7 @@ import { pdfService } from '@/services/PdfService.ts';
 
 const characterStore = useCharacterStore();
 const isLoading = ref(false);
+const isDownloading = ref(false);
 
 // Computed para obtener el label de la clase
 const classLabel = computed(() => {
@@ -100,7 +101,7 @@ const skillLabels: Record<SkillKey, string> = {
   survival: 'Supervivencia (Sab)',
 };
 
-const downloadPdf = async () => {
+const openPdfInNewTab = async () => {
   // Validación básica
   if (!characterStore.concept.name) {
     globalThis.alert('⚠️ Por favor, introduce el nombre del personaje antes de generar el PDF.');
@@ -129,13 +130,38 @@ const downloadPdf = async () => {
     const data = characterStore.getFormattedDataForPdf();
     globalThis.console.log('\n📤 Datos formateados para PDF:', data);
 
-    // Recuerda poner tu archivo en la carpeta public
     await pdfService.generateAndOpenPdf('/Hoja_de_personaje_Editable.pdf', data);
   } catch (e) {
     globalThis.console.error('❌ Error al generar el PDF:', e);
     globalThis.alert('❌ Error al generar el PDF. Revisa la consola para más detalles.');
   } finally {
     isLoading.value = false;
+  }
+};
+
+const downloadPdf = async () => {
+  // Validación básica
+  if (!characterStore.concept.name) {
+    globalThis.alert('⚠️ Por favor, introduce el nombre del personaje antes de descargar el PDF.');
+    return;
+  }
+
+  if (!characterStore.concept.class) {
+    globalThis.alert('⚠️ Por favor, introduce la clase del personaje antes de descargar el PDF.');
+    return;
+  }
+
+  isDownloading.value = true;
+  try {
+    const data = characterStore.getFormattedDataForPdf();
+    const fileName = `${characterStore.concept.name.replace(/[^a-z0-9]/gi, '_').toLowerCase()}_dnd.pdf`;
+
+    await pdfService.generateAndDownloadPdf('/Hoja_de_personaje_Editable.pdf', data, fileName);
+  } catch (e) {
+    globalThis.console.error('❌ Error al descargar el PDF:', e);
+    globalThis.alert('❌ Error al descargar el PDF. Revisa la consola para más detalles.');
+  } finally {
+    isDownloading.value = false;
   }
 };
 
@@ -258,7 +284,7 @@ defineEmits(['useRollDice']);
                     id="character-level"
                     v-model="characterStore.concept.level"
                     :min="1"
-                    :max="20"
+                    :max="1"
                     class="w-full"
                   />
                 </div>
@@ -533,8 +559,34 @@ defineEmits(['useRollDice']);
             <h3 class="text-2xl font-bold text-surface-900 dark:text-surface-50">
               Competencias en Habilidades
             </h3>
+
+            <!-- Descripción informativa -->
+            <div class="flex flex-col gap-3 p-4 bg-blue-50 dark:bg-blue-950 border-l-4 border-blue-500 rounded-lg">
+              <div class="flex items-start gap-3">
+                <i class="pi pi-info-circle text-blue-600 dark:text-blue-400 text-xl mt-0.5"></i>
+                <div class="flex flex-col gap-2">
+                  <h4 class="font-bold text-blue-900 dark:text-blue-100">
+                    ¿Cuántas habilidades debo marcar?
+                  </h4>
+                  <div class="text-sm text-blue-800 dark:text-blue-200 space-y-1">
+                    <p>
+                      El número de competencias depende de tu <strong>clase</strong> y <strong>trasfondo</strong>:
+                    </p>
+                    <ul class="list-disc list-inside space-y-1 ml-2">
+                      <li><strong>Clase:</strong> Normalmente 2-4 habilidades (consulta tu manual de clase)</li>
+                      <li><strong>Trasfondo:</strong> Generalmente 2 habilidades adicionales</li>
+                      <li><strong>Raza:</strong> Algunas razas otorgan competencias extras</li>
+                    </ul>
+                    <p class="mt-2 italic">
+                      💡 Consejo: La mayoría de personajes tienen entre 4-6 habilidades marcadas en total.
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
             <p class="text-surface-600 dark:text-surface-400">
-              Marca las habilidades en las que tu personaje es competente
+              Marca las habilidades en las que tu personaje es competente. Los bonos se calculan automáticamente.
             </p>
 
             <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
@@ -685,15 +737,26 @@ defineEmits(['useRollDice']);
                 </div>
               </div>
 
-              <Button
-                label="Generar PDF"
-                icon="pi pi-file-pdf"
-                severity="success"
-                size="large"
-                :loading="isLoading"
-                class="mt-4"
-                @click="downloadPdf"
-              />
+              <div class="flex flex-col sm:flex-row gap-3 mt-4">
+                <Button
+                  label="Ver en Nueva Pestaña"
+                  icon="pi pi-external-link"
+                  severity="success"
+                  size="large"
+                  :loading="isLoading"
+                  class="flex-1"
+                  @click="openPdfInNewTab"
+                />
+                <Button
+                  label="Descargar PDF"
+                  icon="pi pi-download"
+                  severity="info"
+                  size="large"
+                  :loading="isDownloading"
+                  class="flex-1"
+                  @click="downloadPdf"
+                />
+              </div>
             </div>
           </div>
 
