@@ -85,13 +85,39 @@ const skillLabels: Record<SkillKey, string> = {
 };
 
 const downloadPdf = async () => {
+  // Validación básica
+  if (!characterStore.concept.name) {
+    alert('⚠️ Por favor, introduce el nombre del personaje antes de generar el PDF.');
+    return;
+  }
+
+  if (!characterStore.concept.class) {
+    alert('⚠️ Por favor, introduce la clase del personaje antes de generar el PDF.');
+    return;
+  }
+
   isLoading.value = true;
   try {
+    console.log('📋 Estado actual del personaje:');
+    console.log('Concepto:', characterStore.concept);
+    console.log('Background:', characterStore.background);
+    console.log('Stats:', characterStore.stats);
+    console.log('Modifiers:', characterStore.modifiers);
+    console.log('Skills:', characterStore.skills);
+    console.log('Skill Bonuses:', characterStore.skillBonuses);
+    console.log('Saving Throws:', characterStore.savingThrows);
+    console.log('Saving Throw Bonuses:', characterStore.savingThrowBonuses);
+    console.log('Combat:', characterStore.combat);
+    console.log('Spells:', characterStore.spells);
+
     const data = characterStore.getFormattedDataForPdf();
+    console.log('\n📤 Datos formateados para PDF:', data);
+
     // Recuerda poner tu archivo en la carpeta public
     await pdfService.generateAndOpenPdf('/Hoja_de_personaje_Editable.pdf', data);
   } catch (e) {
-    globalThis.console.error(e);
+    console.error('❌ Error al generar el PDF:', e);
+    alert('❌ Error al generar el PDF. Revisa la consola para más detalles.');
   } finally {
     isLoading.value = false;
   }

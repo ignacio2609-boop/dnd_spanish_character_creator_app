@@ -119,9 +119,23 @@ export const useCharacterStore = defineStore('character', {
       return totals;
     },
 
-    passivePerception(state): number {
+    passivePerception(): number {
       // Calculamos basado en el bono de percepción que acabamos de generar
       return 10 + this.skillBonuses.perception;
+    },
+
+    savingThrowBonuses(state): Record<StatKey, number> {
+      const mods = this.modifiers;
+      const prof = this.proficiencyBonus;
+      const totals = {} as Record<StatKey, number>;
+
+      const statKeys: StatKey[] = ['str', 'dex', 'con', 'int', 'wis', 'cha'];
+      statKeys.forEach((key) => {
+        const isProficient = state.savingThrows[key];
+        totals[key] = mods[key] + (isProficient ? prof : 0);
+      });
+
+      return totals;
     },
   },
 
@@ -129,42 +143,62 @@ export const useCharacterStore = defineStore('character', {
     getFormattedDataForPdf() {
       // Mapa final para el PDF
       return {
-        // --- TEXTOS ---
-        CharacterName: this.concept.name,
-        PlayerName: this.concept.playerName,
-        ClassLevel: `${this.concept.class} ${this.concept.level}`,
-        RaceSelect: this.background.race,
-        BackgroundSelect: this.background.backgroundName,
-        AlignmentSelect: this.background.alignment,
+        // --- TEXTOS BÁSICOS ---
+        CharacterName: this.concept.name || '',
+        PlayerName: this.concept.playerName || '',
+        ClassLevel: this.concept.class ? `${this.concept.class} ${this.concept.level}` : '',
+        RaceSelect: this.background.race || '',
+        BackgroundSelect: this.background.backgroundName || '',
+        AlignmentSelect: this.background.alignment || '',
+        XP: this.concept.xp || 0,
 
-        // --- STATS & SAVES ---
+        // --- ESTADÍSTICAS (Scores y Modificadores) ---
         STRscore: this.stats.str,
+        STRmod: this.modifiers.str,
+        STRsave: this.savingThrowBonuses.str,
         STRsavePROF: this.savingThrows.str,
+
         DEXscore: this.stats.dex,
+        DEXmod: this.modifiers.dex,
+        DEXsave: this.savingThrowBonuses.dex,
         DEXsavePROF: this.savingThrows.dex,
+
         CONscore: this.stats.con,
+        CONmod: this.modifiers.con,
+        CONsave: this.savingThrowBonuses.con,
         CONsavePROF: this.savingThrows.con,
+
         INTscore: this.stats.int,
+        INTmod: this.modifiers.int,
+        INTsave: this.savingThrowBonuses.int,
         INTsavePROF: this.savingThrows.int,
+
         WISscore: this.stats.wis,
+        WISmod: this.modifiers.wis,
+        WISsave: this.savingThrowBonuses.wis,
         WISsavePROF: this.savingThrows.wis,
+
         CHAscore: this.stats.cha,
+        CHAmod: this.modifiers.cha,
+        CHAsave: this.savingThrowBonuses.cha,
         CHAsavePROF: this.savingThrows.cha,
 
-        // --- EXTRAS ---
+        // --- EXTRAS DE COMBATE Y HABILIDAD ---
         ProfBonus: this.proficiencyBonus,
         HPMax: this.combat.hpMax,
-        HitDiceTotal: this.combat.hitDiceTotal,
-        PWP: this.passivePerception, // Passive Wisdom Perception
+        HPCurrent: this.combat.hpCurrent,
+        HitDiceTotal: this.combat.hitDiceTotal || '',
+        AC: this.combat.ac,
+        Initiative: this.combat.initiativeOverride ?? this.modifiers.dex,
+        Speed: this.combat.speed,
+        PWP: this.passivePerception, // Passive Wisdom (Perception)
 
-        // --- SKILLS (Mapeo ID interno -> ID PDF) ---
-        // Checkbox (PROF) y Texto calculado
-
+        // --- SKILLS (Competencias y Bonos Totales) ---
         acroPROF: this.skills.acrobatics,
         Acrobatics: this.skillBonuses.acrobatics,
 
         anhanPROF: this.skills.animalHandling,
-        AnHan: this.skillBonuses.animalHandling, // Log confirmado
+        AnHan: this.skillBonuses.animalHandling,
 
         arcanaPROF: this.skills.arcana,
         Arcana: this.skillBonuses.arcana,
@@ -206,7 +240,7 @@ export const useCharacterStore = defineStore('character', {
         Religion: this.skillBonuses.religion,
 
         sohPROF: this.skills.sleightOfHand,
-        SleightofHand: this.skillBonuses.sleightOfHand, // Log confirmado (todo junto)
+        SleightofHand: this.skillBonuses.sleightOfHand,
 
         stealthPROF: this.skills.stealth,
         Stealth: this.skillBonuses.stealth,
