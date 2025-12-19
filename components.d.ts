@@ -14,6 +14,7 @@ declare module 'vue' {
     Button: typeof import('primevue/button')['default']
     CharacterCreatorForm: typeof import('./src/components/creator-view-components/CharacterCreatorForm.vue')['default']
     DiceContainer: typeof import('./src/components/creator-view-components/DiceContainer.vue')['default']
+    Dropdown: typeof import('primevue/dropdown')['default']
     Footer: typeof import('./src/components/layout/Footer.vue')['default']
     Header: typeof import('./src/components/layout/Header.vue')['default']
     InteractiveGridPattern: typeof import('./src/components/inspira_ui/InteractiveGridPattern.vue')['default']

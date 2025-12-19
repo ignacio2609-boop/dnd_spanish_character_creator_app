@@ -1,66 +1,36 @@
 import { defineStore } from 'pinia';
 
-// Tipos definidos anteriormente...
+// 1. DEFINICIONES DE TIPO Y CONSTANTES
 export type StatKey = 'str' | 'dex' | 'con' | 'int' | 'wis' | 'cha';
-export type SkillKey =
-  | 'acrobatics'
-  | 'animalHandling'
-  | 'arcana'
-  | 'athletics'
-  | 'deception'
-  | 'history'
-  | 'insight'
-  | 'intimidation'
-  | 'investigation'
-  | 'medicine'
-  | 'nature'
-  | 'perception'
-  | 'performance'
-  | 'persuasion'
-  | 'religion'
-  | 'sleightOfHand'
-  | 'stealth'
-  | 'survival';
 
-// Mapa Habilidad -> Atributo
+export type SkillKey =
+  | 'acrobatics' | 'animalHandling' | 'arcana' | 'athletics' | 'deception'
+  | 'history' | 'insight' | 'intimidation' | 'investigation' | 'medicine'
+  | 'nature' | 'perception' | 'performance' | 'persuasion' | 'religion'
+  | 'sleightOfHand' | 'stealth' | 'survival';
+
+// Array constante para iterar sin miedo a undefined
+export const ALL_SKILLS: SkillKey[] = [
+  'acrobatics', 'animalHandling', 'arcana', 'athletics', 'deception',
+  'history', 'insight', 'intimidation', 'investigation', 'medicine',
+  'nature', 'perception', 'performance', 'persuasion', 'religion',
+  'sleightOfHand', 'stealth', 'survival'
+];
+
 const SKILL_ABILITY_MAP: Record<SkillKey, StatKey> = {
-  acrobatics: 'dex',
-  animalHandling: 'wis',
-  arcana: 'int',
-  athletics: 'str',
-  deception: 'cha',
-  history: 'int',
-  insight: 'wis',
-  intimidation: 'cha',
-  investigation: 'int',
-  medicine: 'wis',
-  nature: 'int',
-  perception: 'wis',
-  performance: 'cha',
-  persuasion: 'cha',
-  religion: 'int',
-  sleightOfHand: 'dex',
-  stealth: 'dex',
-  survival: 'wis',
+  acrobatics: 'dex', animalHandling: 'wis', arcana: 'int', athletics: 'str',
+  deception: 'cha', history: 'int', insight: 'wis', intimidation: 'cha',
+  investigation: 'int', medicine: 'wis', nature: 'int', perception: 'wis',
+  performance: 'cha', persuasion: 'cha', religion: 'int', sleightOfHand: 'dex',
+  stealth: 'dex', survival: 'wis',
 };
 
 export const useCharacterStore = defineStore('character', {
   state: () => ({
-    // 1. CONCEPT (Nombre y Nivel)
-    concept: {
-      name: '',
-      playerName: '',
-      class: '',
-      level: 1,
-      xp: 0,
-    },
-    // 2. BACKGROUND (Raza, Trasfondo, Alineamiento - SEPARADO como pediste)
-    background: {
-      race: '',
-      backgroundName: '',
-      alignment: '',
-    },
-    // 3. STATS (Atributos base)
+    concept: { name: '', playerName: '', class: '', level: 1, xp: 0 },
+    background: { race: '', backgroundName: '', alignment: '' },
+
+    // Inicializamos stats
     stats: {
       str: 10,
       dex: 10,
@@ -69,7 +39,18 @@ export const useCharacterStore = defineStore('character', {
       wis: 10,
       cha: 10,
     } as Record<StatKey, number>,
-    // 4. SKILLS (Competencias)
+
+    // Inicializamos Saving Throws
+    savingThrows: {
+      str: false,
+      dex: false,
+      con: false,
+      int: false,
+      wis: false,
+      cha: false,
+    } as Record<StatKey, boolean>,
+
+    // Inicializamos skills (Todas a false por defecto)
     skills: {
       acrobatics: false,
       animalHandling: false,
@@ -90,98 +71,164 @@ export const useCharacterStore = defineStore('character', {
       stealth: false,
       survival: false,
     } as Record<SkillKey, boolean>,
-    // 5. MAGIC (Lista de nombres de conjuros)
-    spells: [] as string[], // Guardaremos nombres: ["Bola de Fuego", "Escudo"]
+
+    combat: {
+      hpMax: 10,
+      hpCurrent: 10,
+      hitDiceTotal: '1d8',
+      ac: 10,
+      speed: 30,
+      initiativeOverride: null as number | null,
+    },
+
+    spells: [] as string[],
   }),
 
   getters: {
     proficiencyBonus(state): number {
       return Math.ceil(state.concept.level / 4) + 1;
     },
+
     modifiers(state): Record<StatKey, number> {
       const mods = {} as Record<StatKey, number>;
-      (Object.keys(state.stats) as StatKey[]).forEach((key) => {
+      const statKeys: StatKey[] = ['str', 'dex', 'con', 'int', 'wis', 'cha'];
+
+      statKeys.forEach((key) => {
         mods[key] = Math.floor((state.stats[key] - 10) / 2);
       });
       return mods;
     },
-    skillBonuses(): Record<SkillKey, number> {
+
+    // ESTE ES EL GETTER QUE TE DABA PROBLEMAS
+    // Ahora iteramos sobre la constante ALL_SKILLS y tipamos el retorno
+    skillBonuses(state): Record<SkillKey, number> {
+      // Accedemos a los modificadores a través de `this` (la instancia de la store)
+      // Nota: En getters de Pinia, `this` refiere a la store completa
+      const mods = this.modifiers;
+      const prof = this.proficiencyBonus;
       const totals = {} as Record<SkillKey, number>;
-      (Object.keys(this.skills) as SkillKey[]).forEach((key) => {
+
+      ALL_SKILLS.forEach((key) => {
         const ability = SKILL_ABILITY_MAP[key];
-        const abilityMod = this.modifiers[ability] || 0;
-        const profBonus = this.skills[key] ? this.proficiencyBonus : 0;
-        totals[key] = abilityMod + profBonus;
+        const abilityMod = mods[ability];
+        const isProficient = state.skills[key];
+
+        totals[key] = abilityMod + (isProficient ? prof : 0);
       });
+
       return totals;
+    },
+
+    passivePerception(state): number {
+      // Calculamos basado en el bono de percepción que acabamos de generar
+      return 10 + this.skillBonuses.perception;
     },
   },
 
   actions: {
-    // Aquí ocurre la magia del mapeo con tus IDs específicos
     getFormattedDataForPdf() {
-      // 1. Datos Base
-      const data: Record<string, string | number | boolean> = {
-        // IDs estándar (asumidos, corrige si tu inspector dice otro)
+      // Mapa final para el PDF
+      return {
+        // --- TEXTOS ---
         CharacterName: this.concept.name,
         PlayerName: this.concept.playerName,
         ClassLevel: `${this.concept.class} ${this.concept.level}`,
-        Race: this.background.race,
-        Background: this.background.backgroundName, // Ojo, a veces el ID es 'Background'
-        Alignment: this.background.alignment,
+        RaceSelect: this.background.race,
+        BackgroundSelect: this.background.backgroundName,
+        AlignmentSelect: this.background.alignment,
 
-        // Atributos y Modificadores
-        STR: this.stats.str,
-        STRmod: this.modifiers.str,
-        DEX: this.stats.dex,
-        DEXmod: this.modifiers.dex,
-        CON: this.stats.con,
-        CONmod: this.modifiers.con,
-        INT: this.stats.int,
-        INTmod: this.modifiers.int,
-        WIS: this.stats.wis,
-        WISmod: this.modifiers.wis,
-        CHA: this.stats.cha,
-        CHAmid: this.modifiers.cha, // A veces es CHAmid por error en el PDF original
+        // --- STATS & SAVES ---
+        STRscore: this.stats.str,
+        STRsavePROF: this.savingThrows.str,
+        DEXscore: this.stats.dex,
+        DEXsavePROF: this.savingThrows.dex,
+        CONscore: this.stats.con,
+        CONsavePROF: this.savingThrows.con,
+        INTscore: this.stats.int,
+        INTsavePROF: this.savingThrows.int,
+        WISscore: this.stats.wis,
+        WISsavePROF: this.savingThrows.wis,
+        CHAscore: this.stats.cha,
+        CHAsavePROF: this.savingThrows.cha,
 
-        // HABILIDADES (Usando los IDs que viste en el inspector: AnHan, Athletics)
-        // Como son ReadOnly, pasamos el VALOR NUMÉRICO calculado
+        // --- EXTRAS ---
+        ProfBonus: this.proficiencyBonus,
+        HPMax: this.combat.hpMax,
+        HitDiceTotal: this.combat.hitDiceTotal,
+        PWP: this.passivePerception, // Passive Wisdom Perception
+
+        // --- SKILLS (Mapeo ID interno -> ID PDF) ---
+        // Checkbox (PROF) y Texto calculado
+
+        acroPROF: this.skills.acrobatics,
+        Acrobatics: this.skillBonuses.acrobatics,
+
+        anhanPROF: this.skills.animalHandling,
+        AnHan: this.skillBonuses.animalHandling, // Log confirmado
+
+        arcanaPROF: this.skills.arcana,
+        Arcana: this.skillBonuses.arcana,
+
+        athPROF: this.skills.athletics,
         Athletics: this.skillBonuses.athletics,
-        AnHan: this.skillBonuses.animalHandling,
-        // ... Tendrás que buscar los IDs cortos para el resto (ej: 'Arcana', 'Hist', etc.)
-        // Si no tienes el ID corto, prueba el nombre completo en inglés.
-        // Acrobatics: this.skillBonuses.acrobatics,
-        //   AnimalHandling: this.skillBonuses.animalHandling,
-        //   Arcana: this.skillBonuses.arcana,
-        //   Athletics: this.skillBonuses.athletics,
-        //   Deception: this.skillBonuses.deception,
-        //   History: this.skillBonuses.history,
-        //   Insight: this.skillBonuses.insight,
-        //   Intimidation: this.skillBonuses.intimidation,
-        //   Investigation: this.skillBonuses.investigation,
-        //   Medicine: this.skillBonuses.medicine,
-        //   Nature: this.skillBonuses.nature,
-        //   Perception: this.skillBonuses.perception,
-        //   Performance: this.skillBonuses.performance,
-        //   Persuasion: this.skillBonuses.persuasion,
-        //   Religion: this.skillBonuses.religion,
-        //   SleightOfHand: this.skillBonuses.sleightOfHand,
-        //   Stealth: this.skillBonuses.stealth,
-        //   Survival: this.skillBonuses.survival,
+
+        decepPROF: this.skills.deception,
+        Deception: this.skillBonuses.deception,
+
+        histPROF: this.skills.history,
+        History: this.skillBonuses.history,
+
+        insightPROF: this.skills.insight,
+        Insight: this.skillBonuses.insight,
+
+        intimPROF: this.skills.intimidation,
+        Intimidation: this.skillBonuses.intimidation,
+
+        investPROF: this.skills.investigation,
+        Investigation: this.skillBonuses.investigation,
+
+        medPROF: this.skills.medicine,
+        Medicine: this.skillBonuses.medicine,
+
+        naturePROF: this.skills.nature,
+        Nature: this.skillBonuses.nature,
+
+        perPROF: this.skills.perception,
+        Perception: this.skillBonuses.perception,
+
+        perfPROF: this.skills.performance,
+        Performance: this.skillBonuses.performance,
+
+        persPROF: this.skills.persuasion,
+        Persuasion: this.skillBonuses.persuasion,
+
+        religPROF: this.skills.religion,
+        Religion: this.skillBonuses.religion,
+
+        sohPROF: this.skills.sleightOfHand,
+        SleightofHand: this.skillBonuses.sleightOfHand, // Log confirmado (todo junto)
+
+        stealthPROF: this.skills.stealth,
+        Stealth: this.skillBonuses.stealth,
+
+        survPROF: this.skills.survival,
+        Survival: this.skillBonuses.survival,
+
+        // --- CONJUROS ---
+        ...this._getSpellMap(),
       };
+    },
 
-      // 2. Mapeo de Conjuros (Llenar Spells92, Spells93, etc.)
-      // Empezamos en el ID 92 según tu log
+    _getSpellMap() {
+      const map: Record<string, string> = {};
       let currentSpellId = 92;
-
       this.spells.forEach((spellName) => {
-        // Creamos la clave dinámica: "Spells92", "Spells93"...
-        const pdfKey = `Spells${currentSpellId}`;
-        data[pdfKey] = spellName;
-        currentSpellId++;
+        if (spellName) {
+          map[`Spells${currentSpellId}`] = spellName;
+          currentSpellId++;
+        }
       });
-
-      return data;
+      return map;
     },
   },
 });

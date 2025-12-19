@@ -3,7 +3,6 @@ import CharacterCreatorForm from '@/components/creator-view-components/Character
 import DiceContainer from '@/components/creator-view-components/DiceContainer.vue';
 import {
   destroyDiceBox,
-  initDiceBox,
   rollDiceWithExpression,
 } from '@/composables/fantasticDiceConfig.ts';
 import { onBeforeMount } from 'vue';
