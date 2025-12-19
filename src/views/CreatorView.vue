@@ -1,6 +1,11 @@
 <script setup lang="ts">
 import CharacterCreatorForm from '@/components/creator-view-components/CharacterCreatorForm.vue';
 import DiceContainer from '@/components/creator-view-components/DiceContainer.vue';
+import { rollDice } from '@/composables/fantasticDiceConfig.ts';
+
+const useRollDice = () => {
+  rollDice();
+};
 </script>
 
 <template>
@@ -12,9 +17,9 @@ import DiceContainer from '@/components/creator-view-components/DiceContainer.vu
           Bienvenido al creador de personajes para Dungeons & Dragons. Aquí podrás crear y
           personalizar tus propios personajes para tus aventuras.
         </p>
-        <CharacterCreatorForm />
+        <CharacterCreatorForm @use-roll-dice="useRollDice" />
       </div>
-      <div class="flex flex-col w-full  gap-1">
+      <div class="flex flex-col w-full gap-1">
         <div class="flex h-full w-full rounded-4xl p-2">
           <DiceContainer />
         </div>

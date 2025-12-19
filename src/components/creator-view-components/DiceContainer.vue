@@ -6,7 +6,7 @@ import InteractiveGridPattern from '@/components/inspira_ui/InteractiveGridPatte
   <div
     class="inspira-theme w-full h-full relative grid place-content-center rounded-4xl overflow-clip"
   >
-    <div id="dice-box-container" class="flex z-10 w-full" />
+    <div id="dice-box-container" class="flex flex-1 z-10" />
     <InteractiveGridPattern
       :class="'[mask-image:radial-gradient(350px_circle_at_center,white,transparent)]'"
       :width="20"

@@ -13,6 +13,8 @@ globalThis.console.warn = (...args: any[]) => {
   }
   originalWarn(...args);
 };
+
+defineEmits(['useRollDice']);
 </script>
 
 <template>
@@ -21,7 +23,9 @@ globalThis.console.warn = (...args: any[]) => {
       <StepItem :value="1">
         <Step> Section 1 </Step>
         <StepPanel v-slot="{ activateCallback }" class="rounded-2xl">
-          <div class="flex flex-col w-full p-4">Content for Section 1</div>
+          <div class="flex flex-col w-full p-4">Content for Section 1
+            <Button label="roll dice" @click="$emit('useRollDice')" />
+          </div>
           <div class="py-6">
             <Button label="Next" @click="activateCallback(2)" />
           </div>
