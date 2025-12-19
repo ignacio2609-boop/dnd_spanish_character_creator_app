@@ -12,11 +12,14 @@ export {}
 declare module 'vue' {
   export interface GlobalComponents {
     Button: typeof import('primevue/button')['default']
+    CharacterCreatorForm: typeof import('./src/components/creator-view-components/CharacterCreatorForm.vue')['default']
+    DiceContainer: typeof import('./src/components/creator-view-components/DiceContainer.vue')['default']
     Footer: typeof import('./src/components/layout/Footer.vue')['default']
     Header: typeof import('./src/components/layout/Header.vue')['default']
     InteractiveGridPattern: typeof import('./src/components/inspira_ui/InteractiveGridPattern.vue')['default']
     LoadingApp: typeof import('./src/components/UI/LoadingApp.vue')['default']
     MainLayout: typeof import('./src/components/layout/MainLayout.vue')['default']
+    PatternBackground: typeof import('./src/components/inspira_ui/PatternBackground.vue')['default']
     PdfInspector: typeof import('./src/components/PdfInspector.vue')['default']
     PrimeButton: typeof import('./src/components/prime_vue/PrimeButton.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']

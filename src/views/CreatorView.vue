@@ -1,12 +1,23 @@
-<script setup lang="ts"></script>
+<script setup lang="ts">
+import CharacterCreatorForm from '@/components/creator-view-components/CharacterCreatorForm.vue';
+</script>
 
 <template>
-  <div>
-    <h1>Creador de personajes D&D</h1>
-    <p class="text-lg text-gray-600">
-      Bienvenido al creador de personajes para Dungeons & Dragons. Aquí podrás crear y personalizar
-      tus propios personajes para tus aventuras.
-    </p>
+  <div id="creator-view" class="flex flex-1 py-8 px-4">
+    <div class="flex w-full gap-4">
+      <div class="flex flex-col min-w-2/3">
+        <h1>Creador de personajes D&D</h1>
+        <p class="text-lg text-gray-600">
+          Bienvenido al creador de personajes para Dungeons & Dragons. Aquí podrás crear y
+          personalizar tus propios personajes para tus aventuras.
+        </p>
+        <CharacterCreatorForm />
+      </div>
+      <div class="flex flex-col w-full bg-black-night gap-1">
+        <div class="flex w-full rounded-4xl p-2"></div>
+        <div class="flex w-full rounded-4xl p-2"></div>
+      </div>
+    </div>
   </div>
 </template>
 
