@@ -2,6 +2,8 @@
 import DiceBox from '@3d-dice/dice-box';
 
 let Box: DiceBox | null = null;
+let isInitializing = false;
+let isInitialized = false;
 
 const colors = [
   '#348888',
@@ -20,29 +22,81 @@ const getRandomColor = () => {
   return colors[Math.floor(Math.random() * colors.length)];
 };
 
-export const initDiceBox = async () => {
-  //if (Box) return Box; // Retorna si ya está inicializado
+const waitForContainer = (selector: string, timeout = 5000): Promise<Element> => {
+  return new Promise((resolve, reject) => {
+    const element = document.querySelector(selector);
+    if (element) {
+      resolve(element);
+      return;
+    }
 
-  Box = new DiceBox({
-    assetPath: '/assets/dice-box/',
-    container: '#dice-box-container',
-    theme: 'default',
-    themeColor: '#feea03',
-    offscreen: true,
-    scale: 8,
-    throwForce: 5,
-    gravity: 1,
-    mass: 1,
-    spinForce: 6,
+    const observer = new MutationObserver(() => {
+      const el = document.querySelector(selector);
+      if (el) {
+        observer.disconnect();
+        resolve(el);
+      }
+    });
+
+    observer.observe(document.body, {
+      childList: true,
+      subtree: true,
+    });
+
+    setTimeout(() => {
+      observer.disconnect();
+      reject(new Error(`Timeout waiting for ${selector}`));
+    }, timeout);
   });
+};
 
-  await Box.init(); // Espera a que se inicialice completamente
-  return Box; // Retorna el objeto inicializado
+export const initDiceBox = async () => {
+  if (isInitializing) {
+    while (isInitializing) {
+      await new Promise((resolve) => setTimeout(resolve, 100));
+    }
+    return Box;
+  }
+
+  try {
+    isInitializing = true;
+
+    // Siempre destruye la instancia anterior
+    if (Box) {
+      await destroyDiceBox();
+    }
+
+    // Espera a que el contenedor exista en el DOM
+    await waitForContainer('#dice-box-container');
+
+    Box = new DiceBox({
+      assetPath: '/assets/dice-box/',
+      container: '#dice-box-container',
+      theme: 'default',
+      themeColor: '#feea03',
+      offscreen: true,
+      scale: 8,
+      throwForce: 5,
+      gravity: 1,
+      mass: 1,
+      spinForce: 6,
+    });
+
+    await Box.init();
+    isInitialized = true;
+    return Box;
+  } catch (error) {
+    console.error('Error al inicializar DiceBox:', error);
+    Box = null;
+    isInitialized = false;
+    throw error;
+  } finally {
+    isInitializing = false;
+  }
 };
 
 export const rollDice = async () => {
-  if (!Box) {
-    console.warn('Box no estaba inicializado, intentando inicializar ahora...');
+  if (!isInitialized || !Box) {
     await initDiceBox();
   }
 
@@ -54,10 +108,10 @@ export const rollDice = async () => {
 };
 
 export const rollDiceWithExpression = async (expression: string[]) => {
-  if (!Box) {
-    console.warn('Box no estaba inicializado, intentando inicializar ahora...');
+  if (!isInitialized || !Box) {
     await initDiceBox();
   }
+
   if (Box) {
     await Box.roll(expression, {
       scale: 10,
@@ -69,5 +123,22 @@ export const rollDiceWithExpression = async (expression: string[]) => {
 export const clearDiceBox = () => {
   if (Box && typeof Box.clear === 'function') {
     Box.clear();
+  }
+};
+
+export const destroyDiceBox = async () => {
+  if (Box) {
+    try {
+      isInitialized = false;
+      clearDiceBox();
+      if (typeof Box.destroy === 'function') {
+        await Box.destroy();
+      }
+    } catch (error) {
+      console.error('Error al destruir DiceBox:', error);
+    } finally {
+      Box = null;
+      isInitialized = false;
+    }
   }
 };

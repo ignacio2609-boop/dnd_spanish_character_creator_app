@@ -1,16 +1,21 @@
 <script setup lang="ts">
 // Importamos los componentes de PrimeVue necesarios
 import Button from 'primevue/button';
-import { onMounted } from 'vue';
-import { initDiceBox, rollDice } from '@/composables/fantasticDiceConfig.ts';
+import { onBeforeMount, onMounted } from 'vue';
+import { destroyDiceBox, initDiceBox, rollDice } from '@/composables/fantasticDiceConfig.ts';
 import router from '@/router/router.ts';
+
+onBeforeMount(async () => {
+  try {
+    await destroyDiceBox();
+  } catch (error) {
+    globalThis.console.error('Error al inicializar DiceBox:', error);
+  }
+});
 
 const initAndRollDice = async () => {
   try {
-    const diceBox = await initDiceBox();
-    if (diceBox) {
-      await rollDice();
-    }
+    await rollDice();
   } catch (error) {
     globalThis.console.error('Error al inicializar DiceBox:', error);
   }

@@ -1,14 +1,24 @@
 <script setup lang="ts">
 import CharacterCreatorForm from '@/components/creator-view-components/CharacterCreatorForm.vue';
 import DiceContainer from '@/components/creator-view-components/DiceContainer.vue';
-import { initDiceBox, rollDiceWithExpression } from '@/composables/fantasticDiceConfig.ts';
+import {
+  destroyDiceBox,
+  initDiceBox,
+  rollDiceWithExpression,
+} from '@/composables/fantasticDiceConfig.ts';
+import { onBeforeMount } from 'vue';
+
+onBeforeMount(async () => {
+  try {
+    await destroyDiceBox();
+  } catch (error) {
+    globalThis.console.error('Error al inicializar DiceBox:', error);
+  }
+});
 
 const initAndRollDice = async () => {
   try {
-    const diceBox = await initDiceBox();
-    if (diceBox) {
-      await rollDiceWithExpression(['1d20', '2d6']);
-    }
+    await rollDiceWithExpression(['1d20', '2d6']);
   } catch (error) {
     globalThis.console.error('Error al inicializar DiceBox:', error);
   }
