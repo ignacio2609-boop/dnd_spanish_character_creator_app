@@ -1,10 +1,17 @@
 <script setup lang="ts">
 import CharacterCreatorForm from '@/components/creator-view-components/CharacterCreatorForm.vue';
 import DiceContainer from '@/components/creator-view-components/DiceContainer.vue';
-import { rollDice } from '@/composables/fantasticDiceConfig.ts';
+import { initDiceBox, rollDiceWithExpression } from '@/composables/fantasticDiceConfig.ts';
 
-const useRollDice = () => {
-  rollDice();
+const initAndRollDice = async () => {
+  try {
+    const diceBox = await initDiceBox();
+    if (diceBox) {
+      await rollDiceWithExpression(['1d20', '2d6']);
+    }
+  } catch (error) {
+    globalThis.console.error('Error al inicializar DiceBox:', error);
+  }
 };
 </script>
 
@@ -17,10 +24,10 @@ const useRollDice = () => {
           Bienvenido al creador de personajes para Dungeons & Dragons. Aquí podrás crear y
           personalizar tus propios personajes para tus aventuras.
         </p>
-        <CharacterCreatorForm @use-roll-dice="useRollDice" />
+        <CharacterCreatorForm @use-roll-dice="initAndRollDice" />
       </div>
       <div class="flex flex-col w-full gap-1">
-        <div class="flex h-full w-full rounded-4xl p-2">
+        <div class="flex h-full w-full rounded-4xl p-2 inspira-theme">
           <DiceContainer />
         </div>
         <div class="flex h-full w-full rounded-4xl p-2"></div>

@@ -21,7 +21,7 @@ const getRandomColor = () => {
 };
 
 export const initDiceBox = async () => {
-  if (Box) return Box; // Retorna si ya está inicializado
+  //if (Box) return Box; // Retorna si ya está inicializado
 
   Box = new DiceBox({
     assetPath: '/assets/dice-box/',
@@ -29,7 +29,7 @@ export const initDiceBox = async () => {
     theme: 'default',
     themeColor: '#feea03',
     offscreen: true,
-    scale: 6,
+    scale: 8,
     throwForce: 5,
     gravity: 1,
     mass: 1,
@@ -60,6 +60,7 @@ export const rollDiceWithExpression = async (expression: string[]) => {
   }
   if (Box) {
     await Box.roll(expression, {
+      scale: 10,
       themeColor: getRandomColor(),
     });
   }
