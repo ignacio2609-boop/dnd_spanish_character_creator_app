@@ -67,7 +67,10 @@ export const initDiceBox = async () => {
     }
 
     // Espera a que el contenedor exista en el DOM
-    await waitForContainer('#dice-box-container');
+    const container = await waitForContainer('#dice-box-container');
+
+    // Obtener dimensiones del contenedor para configurar el DiceBox
+    const rect = container.getBoundingClientRect();
 
     Box = new DiceBox({
       assetPath: '/assets/dice-box/',
@@ -80,6 +83,9 @@ export const initDiceBox = async () => {
       gravity: 1,
       mass: 1,
       spinForce: 6,
+      // Configuración para que se ajuste al contenedor
+      width: rect.width || 800,
+      height: rect.height || 600,
     });
 
     await Box.init();
