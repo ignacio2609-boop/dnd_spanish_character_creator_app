@@ -1,4 +1,9 @@
 import { defineStore } from 'pinia';
+import {
+  calculateInitialHitPoints,
+  getHitDieDisplay,
+  getClassLabel,
+} from '@/services/HitDiceService';
 
 // 1. DEFINICIONES DE TIPO Y CONSTANTES
 export type StatKey = 'str' | 'dex' | 'con' | 'int' | 'wis' | 'cha';
@@ -140,13 +145,29 @@ export const useCharacterStore = defineStore('character', {
   },
 
   actions: {
+    updateCharacterClass(newClass: string) {
+      this.concept.class = newClass;
+      this.updateHitPoints();
+    },
+
+    updateHitPoints() {
+      if (!this.concept.class || !this.stats.con) return;
+
+      const constitutionMod = this.modifiers.con;
+      this.combat.hpMax = calculateInitialHitPoints(this.concept.class, constitutionMod);
+      this.combat.hpCurrent = this.combat.hpMax;
+      this.combat.hitDiceTotal = getHitDieDisplay(this.concept.class);
+    },
+
     getFormattedDataForPdf() {
       // Mapa final para el PDF
       return {
         // --- TEXTOS BÁSICOS ---
         CharacterName: this.concept.name || '',
         PlayerName: this.concept.playerName || '',
-        ClassLevel: this.concept.class ? `${this.concept.class} ${this.concept.level}` : '',
+        ClassLevel: this.concept.class
+          ? `${getClassLabel(this.concept.class)} ${this.concept.level}`
+          : '',
         RaceSelect: this.background.race || '',
         BackgroundSelect: this.background.backgroundName || '',
         AlignmentSelect: this.background.alignment || '',
