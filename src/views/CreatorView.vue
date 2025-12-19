@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import CharacterCreatorForm from '@/components/creator-view-components/CharacterCreatorForm.vue';
+import DiceContainer from '@/components/creator-view-components/DiceContainer.vue';
 </script>
 
 <template>
@@ -13,9 +14,11 @@ import CharacterCreatorForm from '@/components/creator-view-components/Character
         </p>
         <CharacterCreatorForm />
       </div>
-      <div class="flex flex-col w-full bg-black-night gap-1">
-        <div class="flex w-full rounded-4xl p-2"></div>
-        <div class="flex w-full rounded-4xl p-2"></div>
+      <div class="flex flex-col w-full  gap-1">
+        <div class="flex h-full w-full rounded-4xl p-2">
+          <DiceContainer />
+        </div>
+        <div class="flex h-full w-full rounded-4xl p-2"></div>
       </div>
     </div>
   </div>
