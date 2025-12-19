@@ -53,6 +53,18 @@ export const rollDice = async () => {
   }
 };
 
+export const rollDiceWithExpression = async (expression: string[]) => {
+  if (!Box) {
+    console.warn('Box no estaba inicializado, intentando inicializar ahora...');
+    await initDiceBox();
+  }
+  if (Box) {
+    await Box.roll(expression, {
+      themeColor: getRandomColor(),
+    });
+  }
+};
+
 export const clearDiceBox = () => {
   if (Box && typeof Box.clear === 'function') {
     Box.clear();
