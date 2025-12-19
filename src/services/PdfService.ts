@@ -1,82 +1,65 @@
-// src/services/PdfService.ts
-import { PDFDocument, PDFCheckBox, PDFDropdown, PDFTextField } from 'pdf-lib';
-
-// Definimos una interfaz para los datos que llegan de tu formulario Vue
-export interface FormData {
-  [key: string]: string | boolean | number;
-}
-
-// Mapa de configuración: Clave del Formulario Vue -> ID del Campo en el PDF
-// Esto es CRUCIAL para no ensuciar tu vista con IDs raros como 'Text_Field_01'
-export const PDF_FIELD_MAP: Record<string, string> = {
-  // Tu dato en Vue: ID en el PDF
-  nombrePersonaje: 'CharacterName',
-  clase: 'ClassLevel',
-  fuerza: 'STR',
-  esInspirado: 'Inspiration', // Ejemplo para checkbox
-  raza: 'Race',
-  alineamiento: 'Alignment',
-};
+import { PDFDocument, PDFCheckBox, PDFDropdown, PDFTextField, PDFRadioGroup } from 'pdf-lib';
 
 export class PdfService {
   /**
-   * Carga un PDF, lo rellena con datos y lo abre en una nueva pestaña
-   * @param templateUrl URL local del archivo PDF (ej: /assets/hoja.pdf)
-   * @param data Objeto con los datos del formulario
+   * Recibe un objeto plano { "ID_PDF": "Valor" } y rellena el PDF.
+   * Ya no hace mapeos, confía en que la Store le envía los IDs correctos.
    */
-  async generateAndOpenPdf(templateUrl: string, data: FormData): Promise<void> {
+  async generateAndOpenPdf(
+    templateUrl: string,
+    data: Record<string, string | number | boolean>
+  ): Promise<void> {
     try {
-      // 1. Cargar el PDF (puede estar en public/ o assets/)
+      // 1. Cargar el PDF original
       const existingPdfBytes = await fetch(templateUrl).then((res) => res.arrayBuffer());
-
-      // 2. Cargar el documento con pdf-lib
       const pdfDoc = await PDFDocument.load(existingPdfBytes);
       const form = pdfDoc.getForm();
 
-      // 3. Recorrer nuestro mapa de campos y rellenar
-      for (const [vueKey, pdfId] of Object.entries(PDF_FIELD_MAP)) {
-        // Verificamos si tenemos dato para este campo
-        if (data[vueKey] === undefined) continue;
-
-        const value = data[vueKey];
+      // 2. Iterar sobre los datos que nos envía la Store
+      for (const [pdfFieldId, value] of Object.entries(data)) {
+        // Si el valor es null o undefined, saltamos
+        if (value === undefined || value === null) continue;
 
         try {
-          // Intentamos obtener el campo por su ID
-          const field = form.getField(pdfId);
+          // Intentamos obtener el campo por su nombre exacto (ej: 'AnHan', 'Spells92')
+          const field = form.getField(pdfFieldId);
 
+          // Lógica según el TIPO de campo en el PDF
           if (field instanceof PDFTextField) {
-            // Manejo de Texto: Convertimos todo a string
+            // Convertimos números a string (ej: Fuerza 18 -> "18")
             field.setText(String(value));
-          } else if (field instanceof PDFCheckBox && typeof value === 'boolean') {
-            // Manejo de Checkbox
-            // eslint-disable-next-line @typescript-eslint/no-unused-expressions
-            value ? field.check() : field.uncheck();
+          } else if (field instanceof PDFCheckBox) {
+            // Si es booleano true -> check, false -> uncheck
+            if (value === true) field.check();
+            else if (value === false) field.uncheck();
           } else if (field instanceof PDFDropdown) {
-            // Manejo de Select: El valor debe coincidir EXACTAMENTE con una opción del PDF
+            // Seleccionamos la opción (debe coincidir con las opciones del PDF)
+            // Ej: Alignment -> "Legal Bueno"
+            field.select(String(value));
+          } else if (field instanceof PDFRadioGroup) {
             field.select(String(value));
           }
         } catch (err) {
-          console.warn(`Campo PDF no encontrado o error al escribir: ${pdfId}`, err);
+          // Este catch es vital: Si la Store envía un campo que no existe en el PDF,
+          // lo ignoramos silenciosamente en lugar de romper todo el proceso.
+          console.warn(
+            `Campo omitido: No se encontró el campo con ID "${pdfFieldId}" en el PDF.`,
+            err
+          );
         }
       }
 
-      // 4. (Opcional) Aplanar el formulario para que ya no sea editable
-      // form.flatten();
-
-      // 5. Generar el Blob y la URL
+      // 3. Generar y abrir
       const pdfBytes = await pdfDoc.save();
-      // @ts-expect-error pdf-lib tiene un error de tipos con Blob
+      // @ts-expect-error blob type
       const blob = new Blob([pdfBytes], { type: 'application/pdf' });
       const docUrl = URL.createObjectURL(blob);
-
-      // 6. Abrir en nueva pestaña
       window.open(docUrl, '_blank');
     } catch (error) {
-      console.error('Error generando el PDF:', error);
-      throw new Error('No se pudo generar el documento');
+      console.error('Error crítico generando el PDF:', error);
+      throw error;
     }
   }
 }
 
-// Exportamos una instancia única (Singleton) o la clase según prefieras
 export const pdfService = new PdfService();
