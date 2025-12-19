@@ -47,9 +47,10 @@ Una aplicación web moderna para crear personajes de Dungeons & Dragons 5ª Edic
 
 ### 📄 Generación de PDF
 - **Exportación automática** a hoja de personaje oficial editable
-- **Relleno inteligente** de todos los campos del formulario
-- **Cálculos incluidos**: modificadores, salvaciones, bonos de habilidades
-- **Vista previa** en nueva pestaña del navegador
+- **Dos opciones de salida**: Ver en nueva pestaña o descargar directamente
+- **Relleno inteligente** de 70+ campos del formulario
+- **Cálculos automáticos incluidos**: modificadores, salvaciones, bonos de habilidades, puntos de golpe
+- **Nombre de archivo personalizado** basado en el nombre del personaje
 
 ### 🎨 Diseño Moderno
 - **Interfaz responsive** - Funciona en móvil, tablet y desktop
@@ -78,9 +79,10 @@ Esta aplicación web permite crear personajes de Dungeons & Dragons 5ª Edición
 **Características principales:**
 1. **Formulario guiado** que explica cada paso
 2. **Sistema de dados 3D** para tiradas de estadísticas
-3. **Generación automática de PDF** con hoja de personaje oficial
-4. **Cálculos automáticos** de todas las mecánicas del juego
-5. **Interfaz moderna** y fácil de usar
+3. **Cálculo automático de HP** según clase y constitución (11 clases de D&D 5e)
+4. **Generación automática de PDF** con hoja de personaje oficial (ver o descargar)
+5. **Cálculos automáticos** de todas las mecánicas del juego
+6. **Interfaz moderna** y fácil de usar
 
 ---
 
@@ -188,7 +190,8 @@ dnd_spanish_character_creator_app/
 │   │   └── routes.ts                  # Definición de rutas
 │   │
 │   ├── services/                       # Servicios
-│   │   └── PdfService.ts              # Servicio de generación de PDF
+│   │   ├── PdfService.ts              # Servicio de generación de PDF
+│   │   └── HitDiceService.ts          # Lógica de dados de golpe por clase
 │   │
 │   ├── stores/                         # Pinia Stores
 │   │   └── characterStore.ts          # Store del personaje
