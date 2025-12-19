@@ -1,4 +1,9 @@
 import { defineStore } from 'pinia';
+import {
+  calculateInitialHitPoints,
+  getHitDieDisplay,
+  getClassLabel,
+} from '@/services/HitDiceService';
 
 // 1. DEFINICIONES DE TIPO Y CONSTANTES
 export type StatKey = 'str' | 'dex' | 'con' | 'int' | 'wis' | 'cha';
@@ -140,113 +145,114 @@ export const useCharacterStore = defineStore('character', {
   },
 
   actions: {
+    updateCharacterClass(newClass: string) {
+      this.concept.class = newClass;
+      this.updateHitPoints();
+    },
+
+    updateHitPoints() {
+      if (!this.concept.class || !this.stats.con) return;
+
+      const constitutionMod = this.modifiers.con;
+      this.combat.hpMax = calculateInitialHitPoints(this.concept.class, constitutionMod);
+      this.combat.hpCurrent = this.combat.hpMax;
+      this.combat.hitDiceTotal = getHitDieDisplay(this.concept.class);
+    },
+
     getFormattedDataForPdf() {
-      // Mapa final para el PDF
+      // Mapa final para el PDF basado en los campos REALES del PDF
       return {
-        // --- TEXTOS BÁSICOS ---
+        // --- INFORMACIÓN BÁSICA ---
         CharacterName: this.concept.name || '',
         PlayerName: this.concept.playerName || '',
-        ClassLevel: this.concept.class ? `${this.concept.class} ${this.concept.level}` : '',
-        RaceSelect: this.background.race || '',
-        BackgroundSelect: this.background.backgroundName || '',
-        AlignmentSelect: this.background.alignment || '',
-        XP: this.concept.xp || 0,
+        ClassLevel: this.concept.class
+          ? `${getClassLabel(this.concept.class)} ${this.concept.level}`
+          : '',
 
-        // --- ESTADÍSTICAS (Scores y Modificadores) ---
+        // Dropdowns - Nombres exactos del PDF
+        Race: this.background.race || '',
+        Background: this.background.backgroundName || '',
+        Alignment: this.background.alignment || '',
+        ExperiencePoints: this.concept.xp || 0,
+
+        // --- ESTADÍSTICAS (solo scores y checkboxes de salvación) ---
         STRscore: this.stats.str,
-        STRmod: this.modifiers.str,
-        STRsave: this.savingThrowBonuses.str,
         STRsavePROF: this.savingThrows.str,
 
         DEXscore: this.stats.dex,
-        DEXmod: this.modifiers.dex,
-        DEXsave: this.savingThrowBonuses.dex,
         DEXsavePROF: this.savingThrows.dex,
 
         CONscore: this.stats.con,
-        CONmod: this.modifiers.con,
-        CONsave: this.savingThrowBonuses.con,
         CONsavePROF: this.savingThrows.con,
 
         INTscore: this.stats.int,
-        INTmod: this.modifiers.int,
-        INTsave: this.savingThrowBonuses.int,
         INTsavePROF: this.savingThrows.int,
 
         WISscore: this.stats.wis,
-        WISmod: this.modifiers.wis,
-        WISsave: this.savingThrowBonuses.wis,
         WISsavePROF: this.savingThrows.wis,
 
         CHAscore: this.stats.cha,
-        CHAmod: this.modifiers.cha,
-        CHAsave: this.savingThrowBonuses.cha,
         CHAsavePROF: this.savingThrows.cha,
 
-        // --- EXTRAS DE COMBATE Y HABILIDAD ---
+        // --- COMBATE ---
         ProfBonus: this.proficiencyBonus,
         HPMax: this.combat.hpMax,
-        HPCurrent: this.combat.hpCurrent,
+        CurrentHP: this.combat.hpCurrent,
+        TempHP: 0, // Temporal HP - inicialmente 0
         HitDiceTotal: this.combat.hitDiceTotal || '',
         AC: this.combat.ac,
-        Initiative: this.combat.initiativeOverride ?? this.modifiers.dex,
+        Init: this.combat.initiativeOverride ?? this.modifiers.dex, // Initiative
         Speed: this.combat.speed,
-        PWP: this.passivePerception, // Passive Wisdom (Perception)
+        PWP: this.passivePerception,
 
-        // --- SKILLS (Competencias y Bonos Totales) ---
+        // --- HABILIDADES (Skills) ---
+        // Checkboxes de competencia
         acroPROF: this.skills.acrobatics,
-        Acrobatics: this.skillBonuses.acrobatics,
-
         anhanPROF: this.skills.animalHandling,
-        AnHan: this.skillBonuses.animalHandling,
-
         arcanaPROF: this.skills.arcana,
-        Arcana: this.skillBonuses.arcana,
-
         athPROF: this.skills.athletics,
-        Athletics: this.skillBonuses.athletics,
-
         decepPROF: this.skills.deception,
-        Deception: this.skillBonuses.deception,
-
         histPROF: this.skills.history,
-        History: this.skillBonuses.history,
-
         insightPROF: this.skills.insight,
-        Insight: this.skillBonuses.insight,
-
         intimPROF: this.skills.intimidation,
-        Intimidation: this.skillBonuses.intimidation,
-
         investPROF: this.skills.investigation,
-        Investigation: this.skillBonuses.investigation,
-
         medPROF: this.skills.medicine,
-        Medicine: this.skillBonuses.medicine,
-
         naturePROF: this.skills.nature,
-        Nature: this.skillBonuses.nature,
-
         perPROF: this.skills.perception,
-        Perception: this.skillBonuses.perception,
-
         perfPROF: this.skills.performance,
-        Performance: this.skillBonuses.performance,
-
         persPROF: this.skills.persuasion,
-        Persuasion: this.skillBonuses.persuasion,
-
         religPROF: this.skills.religion,
-        Religion: this.skillBonuses.religion,
-
         sohPROF: this.skills.sleightOfHand,
-        SleightofHand: this.skillBonuses.sleightOfHand,
-
         stealthPROF: this.skills.stealth,
-        Stealth: this.skillBonuses.stealth,
-
         survPROF: this.skills.survival,
+
+        // Bonos totales de habilidades
+        Acrobatics: this.skillBonuses.acrobatics,
+        AnHan: this.skillBonuses.animalHandling,
+        Arcana: this.skillBonuses.arcana,
+        Athletics: this.skillBonuses.athletics,
+        Deception: this.skillBonuses.deception,
+        History: this.skillBonuses.history,
+        Insight: this.skillBonuses.insight,
+        Intimidation: this.skillBonuses.intimidation,
+        Investigation: this.skillBonuses.investigation,
+        Medicine: this.skillBonuses.medicine,
+        Nature: this.skillBonuses.nature,
+        Perception: this.skillBonuses.perception,
+        Performance: this.skillBonuses.performance,
+        Persuasion: this.skillBonuses.persuasion,
+        Religion: this.skillBonuses.religion,
+        SleightofHand: this.skillBonuses.sleightOfHand,
+        Stealth: this.skillBonuses.stealth,
         Survival: this.skillBonuses.survival,
+
+        // --- SALVACIONES (Bonos totales calculados) ---
+        STRsave: this.savingThrowBonuses.str,
+        DEXsave: this.savingThrowBonuses.dex,
+        CONsave: this.savingThrowBonuses.con,
+        INTsave: this.savingThrowBonuses.int,
+        WISsave: this.savingThrowBonuses.wis,
+        CHAsave: this.savingThrowBonuses.cha,
 
         // --- CONJUROS ---
         ...this._getSpellMap(),

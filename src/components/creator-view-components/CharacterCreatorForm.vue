@@ -10,11 +10,28 @@ import Dropdown from 'primevue/dropdown';
 import Checkbox from 'primevue/checkbox';
 import { RainbowButton } from '@/components/inspira_ui';
 import { useCharacterStore, ALL_SKILLS, type SkillKey, type StatKey } from '@/stores/characterStore.ts';
-import { ref } from 'vue';
+import { CHARACTER_CLASSES } from '@/services/HitDiceService';
+import { ref, watch, computed } from 'vue';
 import { pdfService } from '@/services/PdfService.ts';
 
 const characterStore = useCharacterStore();
 const isLoading = ref(false);
+const isDownloading = ref(false);
+
+// Computed para obtener el label de la clase
+const classLabel = computed(() => {
+  if (!characterStore.concept.class) return 'Aventurero';
+  const classInfo = CHARACTER_CLASSES.find((c) => c.value === characterStore.concept.class);
+  return classInfo?.label || characterStore.concept.class;
+});
+
+// Watch para actualizar HP cuando cambie la clase o CON
+watch(
+  () => [characterStore.concept.class, characterStore.stats.con],
+  () => {
+    characterStore.updateHitPoints();
+  }
+);
 
 // Opciones EXACTAS del PDF para PrimeVue
 
@@ -84,42 +101,67 @@ const skillLabels: Record<SkillKey, string> = {
   survival: 'Supervivencia (Sab)',
 };
 
-const downloadPdf = async () => {
+const openPdfInNewTab = async () => {
   // Validación básica
   if (!characterStore.concept.name) {
-    alert('⚠️ Por favor, introduce el nombre del personaje antes de generar el PDF.');
+    globalThis.alert('⚠️ Por favor, introduce el nombre del personaje antes de generar el PDF.');
     return;
   }
 
   if (!characterStore.concept.class) {
-    alert('⚠️ Por favor, introduce la clase del personaje antes de generar el PDF.');
+    globalThis.alert('⚠️ Por favor, introduce la clase del personaje antes de generar el PDF.');
     return;
   }
 
   isLoading.value = true;
   try {
-    console.log('📋 Estado actual del personaje:');
-    console.log('Concepto:', characterStore.concept);
-    console.log('Background:', characterStore.background);
-    console.log('Stats:', characterStore.stats);
-    console.log('Modifiers:', characterStore.modifiers);
-    console.log('Skills:', characterStore.skills);
-    console.log('Skill Bonuses:', characterStore.skillBonuses);
-    console.log('Saving Throws:', characterStore.savingThrows);
-    console.log('Saving Throw Bonuses:', characterStore.savingThrowBonuses);
-    console.log('Combat:', characterStore.combat);
-    console.log('Spells:', characterStore.spells);
+    globalThis.console.log('📋 Estado actual del personaje:');
+    globalThis.console.log('Concepto:', characterStore.concept);
+    globalThis.console.log('Background:', characterStore.background);
+    globalThis.console.log('Stats:', characterStore.stats);
+    globalThis.console.log('Modifiers:', characterStore.modifiers);
+    globalThis.console.log('Skills:', characterStore.skills);
+    globalThis.console.log('Skill Bonuses:', characterStore.skillBonuses);
+    globalThis.console.log('Saving Throws:', characterStore.savingThrows);
+    globalThis.console.log('Saving Throw Bonuses:', characterStore.savingThrowBonuses);
+    globalThis.console.log('Combat:', characterStore.combat);
+    globalThis.console.log('Spells:', characterStore.spells);
 
     const data = characterStore.getFormattedDataForPdf();
-    console.log('\n📤 Datos formateados para PDF:', data);
+    globalThis.console.log('\n📤 Datos formateados para PDF:', data);
 
-    // Recuerda poner tu archivo en la carpeta public
     await pdfService.generateAndOpenPdf('/Hoja_de_personaje_Editable.pdf', data);
   } catch (e) {
-    console.error('❌ Error al generar el PDF:', e);
-    alert('❌ Error al generar el PDF. Revisa la consola para más detalles.');
+    globalThis.console.error('❌ Error al generar el PDF:', e);
+    globalThis.alert('❌ Error al generar el PDF. Revisa la consola para más detalles.');
   } finally {
     isLoading.value = false;
+  }
+};
+
+const downloadPdf = async () => {
+  // Validación básica
+  if (!characterStore.concept.name) {
+    globalThis.alert('⚠️ Por favor, introduce el nombre del personaje antes de descargar el PDF.');
+    return;
+  }
+
+  if (!characterStore.concept.class) {
+    globalThis.alert('⚠️ Por favor, introduce la clase del personaje antes de descargar el PDF.');
+    return;
+  }
+
+  isDownloading.value = true;
+  try {
+    const data = characterStore.getFormattedDataForPdf();
+    const fileName = `${characterStore.concept.name.replace(/[^a-z0-9]/gi, '_').toLowerCase()}_dnd.pdf`;
+
+    await pdfService.generateAndDownloadPdf('/Hoja_de_personaje_Editable.pdf', data, fileName);
+  } catch (e) {
+    globalThis.console.error('❌ Error al descargar el PDF:', e);
+    globalThis.alert('❌ Error al descargar el PDF. Revisa la consola para más detalles.');
+  } finally {
+    isDownloading.value = false;
   }
 };
 
@@ -195,12 +237,40 @@ defineEmits(['useRollDice']);
                   >
                     Clase
                   </label>
-                  <InputText
+                  <Dropdown
                     id="character-class"
                     v-model="characterStore.concept.class"
-                    placeholder="Ej: Mago"
+                    :options="CHARACTER_CLASSES"
+                    option-label="label"
+                    option-value="value"
+                    placeholder="Selecciona una clase"
                     class="w-full"
-                  />
+                    filter
+                  >
+                    <template #value="slotProps">
+                      <div v-if="slotProps.value" class="flex items-center gap-2">
+                        <i class="pi pi-shield text-primary-500"></i>
+                        <span>{{
+                          CHARACTER_CLASSES.find((c) => c.value === slotProps.value)?.label
+                        }}</span>
+                      </div>
+                      <span v-else>{{ slotProps.placeholder }}</span>
+                    </template>
+
+                    <template #option="slotProps">
+                      <div class="flex items-center justify-between gap-3 w-full">
+                        <div class="flex items-center gap-2">
+                          <i class="pi pi-shield text-primary-500"></i>
+                          <span>{{ slotProps.option.label }}</span>
+                        </div>
+                        <span
+                          class="text-xs font-mono text-surface-500 dark:text-surface-400 bg-surface-100 dark:bg-surface-800 px-2 py-1 rounded"
+                        >
+                          {{ slotProps.option.hitDie }}
+                        </span>
+                      </div>
+                    </template>
+                  </Dropdown>
                 </div>
 
                 <div class="flex flex-col gap-2">
@@ -214,7 +284,7 @@ defineEmits(['useRollDice']);
                     id="character-level"
                     v-model="characterStore.concept.level"
                     :min="1"
-                    :max="20"
+                    :max="1"
                     class="w-full"
                   />
                 </div>
@@ -410,12 +480,42 @@ defineEmits(['useRollDice']);
               </div>
             </div>
 
+            <!-- Información de Puntos de Golpe -->
+            <div
+              v-if="characterStore.concept.class"
+              class="flex items-start gap-3 p-4 bg-green-50 dark:bg-green-950 rounded-lg border border-green-200 dark:border-green-800"
+            >
+              <i class="pi pi-heart-fill text-2xl text-red-500 mt-0.5"></i>
+              <div class="flex flex-col gap-1 flex-1">
+                <span
+                  class="text-xs font-semibold text-surface-600 dark:text-surface-400 uppercase tracking-wide"
+                >
+                  Puntos de Golpe Calculados Automáticamente
+                </span>
+                <span class="text-lg font-bold text-surface-900 dark:text-surface-50">
+                  {{ characterStore.combat.hpMax }} PG ({{ characterStore.combat.hitDiceTotal }} +
+                  {{ characterStore.modifiers.con >= 0 ? '+' : ''
+                  }}{{ characterStore.modifiers.con }} CON)
+                </span>
+                <p class="text-xs text-surface-600 dark:text-surface-400 mt-1">
+                  En nivel 1 obtienes el máximo del dado de golpe más tu modificador de
+                  Constitución. Los valores se actualizan automáticamente al cambiar tu clase o CON.
+                </p>
+              </div>
+            </div>
+
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4 pt-4">
               <div class="flex flex-col gap-2">
                 <label for="hp-max" class="font-semibold text-surface-700 dark:text-surface-200">
                   Puntos de Golpe Máx. (HP)
                 </label>
-                <InputNumber id="hp-max" v-model="characterStore.combat.hpMax" class="w-full" />
+                <InputNumber
+                  id="hp-max"
+                  v-model="characterStore.combat.hpMax"
+                  class="w-full"
+                  readonly
+                  disabled
+                />
               </div>
               <div class="flex flex-col gap-2">
                 <label for="hit-dice" class="font-semibold text-surface-700 dark:text-surface-200">
@@ -426,6 +526,8 @@ defineEmits(['useRollDice']);
                   v-model="characterStore.combat.hitDiceTotal"
                   placeholder="Ej: 1d8"
                   class="w-full"
+                  readonly
+                  disabled
                 />
               </div>
             </div>
@@ -457,8 +559,34 @@ defineEmits(['useRollDice']);
             <h3 class="text-2xl font-bold text-surface-900 dark:text-surface-50">
               Competencias en Habilidades
             </h3>
+
+            <!-- Descripción informativa -->
+            <div class="flex flex-col gap-3 p-4 bg-blue-50 dark:bg-blue-950 border-l-4 border-blue-500 rounded-lg">
+              <div class="flex items-start gap-3">
+                <i class="pi pi-info-circle text-blue-600 dark:text-blue-400 text-xl mt-0.5"></i>
+                <div class="flex flex-col gap-2">
+                  <h4 class="font-bold text-blue-900 dark:text-blue-100">
+                    ¿Cuántas habilidades debo marcar?
+                  </h4>
+                  <div class="text-sm text-blue-800 dark:text-blue-200 space-y-1">
+                    <p>
+                      El número de competencias depende de tu <strong>clase</strong> y <strong>trasfondo</strong>:
+                    </p>
+                    <ul class="list-disc list-inside space-y-1 ml-2">
+                      <li><strong>Clase:</strong> Normalmente 2-4 habilidades (consulta tu manual de clase)</li>
+                      <li><strong>Trasfondo:</strong> Generalmente 2 habilidades adicionales</li>
+                      <li><strong>Raza:</strong> Algunas razas otorgan competencias extras</li>
+                    </ul>
+                    <p class="mt-2 italic">
+                      💡 Consejo: La mayoría de personajes tienen entre 4-6 habilidades marcadas en total.
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
             <p class="text-surface-600 dark:text-surface-400">
-              Marca las habilidades en las que tu personaje es competente
+              Marca las habilidades en las que tu personaje es competente. Los bonos se calculan automáticamente.
             </p>
 
             <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
@@ -598,7 +726,7 @@ defineEmits(['useRollDice']);
                 <div class="flex justify-between items-center">
                   <span class="font-semibold text-surface-700 dark:text-surface-300">Clase:</span>
                   <span class="text-surface-900 dark:text-surface-50">
-                    {{ characterStore.concept.class || 'Aventurero' }}
+                    {{ classLabel }}
                   </span>
                 </div>
                 <div class="flex justify-between items-center">
@@ -609,15 +737,26 @@ defineEmits(['useRollDice']);
                 </div>
               </div>
 
-              <Button
-                label="Generar PDF"
-                icon="pi pi-file-pdf"
-                severity="success"
-                size="large"
-                :loading="isLoading"
-                class="mt-4"
-                @click="downloadPdf"
-              />
+              <div class="flex flex-col sm:flex-row gap-3 mt-4">
+                <Button
+                  label="Ver en Nueva Pestaña"
+                  icon="pi pi-external-link"
+                  severity="success"
+                  size="large"
+                  :loading="isLoading"
+                  class="flex-1"
+                  @click="openPdfInNewTab"
+                />
+                <Button
+                  label="Descargar PDF"
+                  icon="pi pi-download"
+                  severity="info"
+                  size="large"
+                  :loading="isDownloading"
+                  class="flex-1"
+                  @click="downloadPdf"
+                />
+              </div>
             </div>
           </div>
 

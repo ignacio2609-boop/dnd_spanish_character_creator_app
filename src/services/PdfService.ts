@@ -26,8 +26,17 @@ export class PdfService {
 
       console.log(`PDF cargado. Total de campos en el formulario: ${fields.length}`);
 
+      // Log específico para dropdowns importantes
+      console.log('\n🔍 VALORES DE DROPDOWNS A ENVIAR:');
+      console.log('  Race:', data.Race);
+      console.log('  Background:', data.Background);
+      console.log('  Alignment:', data.Alignment);
+
       // Log de todos los campos disponibles (útil para debugging)
-      console.log('Campos disponibles en el PDF:', fields.map(f => f.getName()));
+      console.log('\n📋 TODOS LOS CAMPOS DISPONIBLES EN EL PDF:');
+      fields.forEach((field, index) => {
+        console.log(`  ${index + 1}. "${field.getName()}"`);
+      });
 
       let successCount = 0;
       let skipCount = 0;
@@ -61,7 +70,29 @@ export class PdfService {
             }
           } else if (field instanceof PDFDropdown) {
             // Seleccionamos la opción (debe coincidir con las opciones del PDF)
+            const options = field.getOptions();
+            console.log(`🔍 Dropdown "${pdfFieldId}":`, {
+              valorEnviado: String(value),
+              opcionesDisponibles: options,
+            });
+
+            // Verificar si el valor existe en las opciones
+            if (!options.includes(String(value))) {
+              console.warn(
+                `⚠️ Valor "${value}" no coincide con ninguna opción del dropdown "${pdfFieldId}"`
+              );
+            }
+
             field.select(String(value));
+
+            // Ajustar tamaño de fuente solo para dropdowns
+            try {
+              // Usar un tamaño de fuente más pequeño para dropdowns (10pt)
+              field.setFontSize(10);
+            } catch (_) {
+              // Si falla, ignorar
+            }
+
             console.log(`✅ Dropdown "${pdfFieldId}" = "${value}"`);
           } else if (field instanceof PDFRadioGroup) {
             field.select(String(value));
@@ -69,11 +100,11 @@ export class PdfService {
           }
 
           successCount++;
-        } catch (err) {
+        } catch (_err) {
           errorCount++;
           console.warn(
             `⚠️ Campo "${pdfFieldId}" no encontrado o error al rellenar.`,
-            err
+            _err
           );
         }
       }
@@ -96,6 +127,81 @@ export class PdfService {
       console.groupEnd();
     } catch (error) {
       console.error('❌ Error crítico generando el PDF:', error);
+      console.groupEnd();
+      throw error;
+    }
+  }
+
+  /**
+   * Genera y descarga el PDF directamente
+   */
+  async generateAndDownloadPdf(
+    templateUrl: string,
+    data: Record<string, string | number | boolean>,
+    fileName: string = 'personaje_dnd.pdf'
+  ): Promise<void> {
+    console.group('📥 Descarga de PDF');
+    console.log('Datos a rellenar:', data);
+
+    try {
+      // Usar el mismo proceso de generación
+      const existingPdfBytes = await fetch(templateUrl).then((res) => {
+        if (!res.ok) throw new Error(`No se pudo cargar el PDF: ${res.statusText}`);
+        return res.arrayBuffer();
+      });
+
+      const pdfDoc = await PDFDocument.load(existingPdfBytes);
+      const form = pdfDoc.getForm();
+
+      // Rellenar campos (mismo proceso que generateAndOpenPdf)
+      for (const [pdfFieldId, value] of Object.entries(data)) {
+        if (value === undefined || value === null) continue;
+
+        try {
+          const field = form.getField(pdfFieldId);
+
+          if (field instanceof PDFTextField) {
+            field.setText(String(value));
+          } else if (field instanceof PDFCheckBox) {
+            if (value === true) field.check();
+            else if (value === false) field.uncheck();
+          } else if (field instanceof PDFDropdown) {
+            field.select(String(value));
+
+            // Ajustar tamaño de fuente solo para dropdowns
+            try {
+              field.setFontSize(10);
+            } catch (_) {
+              // Si falla, ignorar
+            }
+          } else if (field instanceof PDFRadioGroup) {
+            field.select(String(value));
+          }
+        } catch (_err) {
+          // Ignorar campos que no existen
+        }
+      }
+
+      // Generar PDF y descargar
+      console.log('🔄 Generando PDF para descarga...');
+      const pdfBytes = await pdfDoc.save();
+      const blob = new Blob([pdfBytes], { type: 'application/pdf' });
+
+      // Crear link de descarga y hacer click automáticamente
+      const link = document.createElement('a');
+      link.href = URL.createObjectURL(blob);
+      link.download = fileName;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+
+      // Limpiar objeto URL
+      setTimeout(() => URL.revokeObjectURL(link.href), 100);
+
+      console.log(`✅ PDF descargado exitosamente como "${fileName}"`);
+      console.groupEnd();
+    } catch (error) {
+      console.error('❌ Error crítico descargando el PDF:', error);
       console.groupEnd();
       throw error;
     }
