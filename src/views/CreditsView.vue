@@ -130,15 +130,44 @@ const techStack = [
         </h2>
       </div>
 
-      <div class="flex flex-col gap-3 p-6 bg-surface-50 dark:bg-surface-900 rounded-xl border border-surface-200 dark:border-surface-800">
-        <p class="text-surface-700 dark:text-surface-300 leading-relaxed">
-          Gracias a toda la comunidad de código abierto y a los desarrolladores que comparten su
-          trabajo de forma gratuita. Esta aplicación es posible gracias a su generosidad.
-        </p>
-        <p class="text-surface-700 dark:text-surface-300 leading-relaxed">
-          Un agradecimiento especial a Wizards of the Coast por crear Dungeons & Dragons, el juego
-          que inspira esta herramienta.
-        </p>
+      <div class="flex flex-col gap-4">
+        <!-- Agradecimiento a Sara -->
+        <div class="flex items-start gap-4 p-6 bg-gradient-to-br from-pink-50 to-purple-50 dark:from-pink-950 dark:to-purple-950 rounded-xl border border-pink-200 dark:border-pink-800">
+          <div class="flex items-center justify-center w-12 h-12 bg-pink-500 rounded-full flex-shrink-0">
+            <i class="pi pi-palette text-2xl text-white"></i>
+          </div>
+          <div class="flex flex-col gap-2">
+            <h3 class="text-xl font-bold text-pink-900 dark:text-pink-100">
+              Sara Armengol Abad
+            </h3>
+            <p class="text-sm font-semibold text-pink-700 dark:text-pink-300 uppercase tracking-wide">
+              Sistema de Color
+            </p>
+            <p class="text-pink-800 dark:text-pink-200 leading-relaxed">
+              Responsable del diseño del sistema cromático y la identidad visual de la aplicación.
+              Su expertise en teoría del color y UI/UX ha sido fundamental para lograr una experiencia
+              coherente y accesible en todos los componentes.
+            </p>
+            <div class="flex items-center gap-2 mt-1">
+              <i class="pi pi-heart-fill text-pink-600 dark:text-pink-400 text-sm"></i>
+              <span class="text-sm font-semibold text-pink-700 dark:text-pink-300">
+                Gracias por elevar la calidad visual del proyecto
+              </span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Otros agradecimientos -->
+        <div class="flex flex-col gap-3 p-6 bg-surface-50 dark:bg-surface-900 rounded-xl border border-surface-200 dark:border-surface-800">
+          <p class="text-surface-700 dark:text-surface-300 leading-relaxed">
+            Gracias a toda la comunidad de código abierto y a los desarrolladores que comparten su
+            trabajo de forma gratuita. Esta aplicación es posible gracias a su generosidad.
+          </p>
+          <p class="text-surface-700 dark:text-surface-300 leading-relaxed">
+            Un agradecimiento especial a Wizards of the Coast por crear Dungeons & Dragons, el juego
+            que inspira esta herramienta.
+          </p>
+        </div>
       </div>
     </section>
 
