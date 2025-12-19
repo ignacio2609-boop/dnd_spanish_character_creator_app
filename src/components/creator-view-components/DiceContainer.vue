@@ -3,7 +3,7 @@ import InteractiveGridPattern from '@/components/inspira_ui/InteractiveGridPatte
 </script>
 
 <template>
-  <div class="flex relative w-full h-full rounded-4xl">
+  <div class="flex relative w-full h-full rounded-4xl place-content-center-safe">
     <InteractiveGridPattern
       :class="'[mask-image:radial-gradient(350px_circle_at_center,white,transparent)]'"
       :width="20"
