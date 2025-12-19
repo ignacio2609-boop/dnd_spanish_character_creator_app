@@ -84,6 +84,15 @@ export class PdfService {
             }
 
             field.select(String(value));
+
+            // Ajustar tamaño de fuente solo para dropdowns
+            try {
+              // Usar un tamaño de fuente más pequeño para dropdowns (10pt)
+              field.setFontSize(10);
+            } catch (_) {
+              // Si falla, ignorar
+            }
+
             console.log(`✅ Dropdown "${pdfFieldId}" = "${value}"`);
           } else if (field instanceof PDFRadioGroup) {
             field.select(String(value));
@@ -91,11 +100,11 @@ export class PdfService {
           }
 
           successCount++;
-        } catch (err) {
+        } catch (_err) {
           errorCount++;
           console.warn(
             `⚠️ Campo "${pdfFieldId}" no encontrado o error al rellenar.`,
-            err
+            _err
           );
         }
       }
@@ -158,10 +167,17 @@ export class PdfService {
             else if (value === false) field.uncheck();
           } else if (field instanceof PDFDropdown) {
             field.select(String(value));
+
+            // Ajustar tamaño de fuente solo para dropdowns
+            try {
+              field.setFontSize(10);
+            } catch (_) {
+              // Si falla, ignorar
+            }
           } else if (field instanceof PDFRadioGroup) {
             field.select(String(value));
           }
-        } catch (err) {
+        } catch (_err) {
           // Ignorar campos que no existen
         }
       }
