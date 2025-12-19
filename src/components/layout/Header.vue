@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import PrimeButton from '@/components/prime_vue/PrimeButton.vue';
+import mainIcon from '@/assets/main_icon.svg';
 
 const emit = defineEmits(['show-drawer']);
 
@@ -22,11 +23,7 @@ const showDrawer = () => {
       <div class="absolute left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2">
         <a href="/home" class="block">
           <span class="sr-only">Your Company</span>
-          <img
-            class="h-8 w-auto"
-            src="https://tailwindcss.com/plus-assets/img/logos/mark.svg?color=indigo&shade=500"
-            alt="Imagen header"
-          />
+          <img class="h-12 w-auto" :src="mainIcon" alt="Imagen header" />
         </a>
       </div>
     </nav>
