@@ -1,5 +1,5 @@
 <script setup lang="ts">
-/* eslint-disable no-undef */
+ 
 import InteractiveGridPattern from '@/components/inspira_ui/InteractiveGridPattern.vue';
 import { onMounted, onBeforeUnmount } from 'vue';
 

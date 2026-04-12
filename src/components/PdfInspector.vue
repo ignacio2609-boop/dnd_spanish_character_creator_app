@@ -23,6 +23,10 @@ interface FieldInfo {
 const loading = ref(false);
 const fieldList = ref<FieldInfo[]>([]);
 
+const copyFieldName = async (name: string) => {
+  await globalThis.navigator.clipboard.writeText(name);
+};
+
 const handleFileUpload = async (event: Event) => {
   const input = event.target as HTMLInputElement;
   if (!input.files || input.files.length === 0) return;
@@ -105,7 +109,7 @@ const handleFileUpload = async (event: Event) => {
               <code
                 class="field-name"
                 title="Click para copiar"
-                @click="navigator.clipboard.writeText(field.name)"
+                @click="copyFieldName(field.name)"
               >
                 {{ field.name }}
               </code>

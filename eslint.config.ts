@@ -32,6 +32,20 @@ export default [
     },
   },
   {
+    languageOptions: {
+      globals: {
+        window: 'readonly',
+        document: 'readonly',
+        navigator: 'readonly',
+        console: 'readonly',
+        alert: 'readonly',
+        URL: 'readonly',
+        fetch: 'readonly',
+        setTimeout: 'readonly',
+      },
+    },
+  },
+  {
     rules: {
       'vue/max-attributes-per-line': [
         'error',
@@ -64,6 +78,6 @@ export default [
     },
   },
   {
-    ignores: ['node_modules/', 'dist/', '*.config.js'],
+    ignores: ['node_modules/', 'dist/', '*.config.js', '**/*.d.ts', 'components.d.ts'],
   },
 ];

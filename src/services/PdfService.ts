@@ -1,6 +1,10 @@
 import { PDFDocument, PDFCheckBox, PDFDropdown, PDFTextField, PDFRadioGroup } from 'pdf-lib';
 
 export class PdfService {
+  private toPdfBlobPart(pdfBytes: Uint8Array): ArrayBuffer {
+    return new Uint8Array(pdfBytes).buffer;
+  }
+
   /**
    * Recibe un objeto plano { "ID_PDF": "Valor" } y rellena el PDF.
    * Ya no hace mapeos, confía en que la Store le envía los IDs correctos.
@@ -89,7 +93,7 @@ export class PdfService {
             try {
               // Usar un tamaño de fuente más pequeño para dropdowns (10pt)
               field.setFontSize(10);
-            } catch (_) {
+            } catch {
               // Si falla, ignorar
             }
 
@@ -117,8 +121,7 @@ export class PdfService {
       // 3. Generar y abrir
       console.log('\n🔄 Generando PDF final...');
       const pdfBytes = await pdfDoc.save();
-      // @ts-expect-error blob
-      const blob = new Blob([pdfBytes], { type: 'application/pdf' });
+      const blob = new Blob([this.toPdfBlobPart(pdfBytes)], { type: 'application/pdf' });
       const docUrl = URL.createObjectURL(blob);
 
       console.log('✅ PDF generado exitosamente. Abriendo en nueva pestaña...');
@@ -171,13 +174,13 @@ export class PdfService {
             // Ajustar tamaño de fuente solo para dropdowns
             try {
               field.setFontSize(10);
-            } catch (_) {
+            } catch {
               // Si falla, ignorar
             }
           } else if (field instanceof PDFRadioGroup) {
             field.select(String(value));
           }
-        } catch (_err) {
+        } catch {
           // Ignorar campos que no existen
         }
       }
@@ -185,7 +188,7 @@ export class PdfService {
       // Generar PDF y descargar
       console.log('🔄 Generando PDF para descarga...');
       const pdfBytes = await pdfDoc.save();
-      const blob = new Blob([pdfBytes], { type: 'application/pdf' });
+      const blob = new Blob([this.toPdfBlobPart(pdfBytes)], { type: 'application/pdf' });
 
       // Crear link de descarga y hacer click automáticamente
       const link = document.createElement('a');
