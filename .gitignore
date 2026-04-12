@@ -29,6 +29,6 @@ coverage
 
 *.tsbuildinfo
 
-npublic/assets/themes/
-npublic/assets/ammo/
+public/assets/themes/
+public/assets/ammo/
 components.d.ts
