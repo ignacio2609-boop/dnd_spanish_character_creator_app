@@ -28,3 +28,7 @@ coverage
 *.sw?
 
 *.tsbuildinfo
+
+npublic/assets/themes/
+npublic/assets/ammo/
+components.d.ts
