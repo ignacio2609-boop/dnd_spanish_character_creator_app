@@ -1,6 +1,6 @@
 # Creador de Personajes D&D 🎲
 
-![Version](https://img.shields.io/badge/version-1.0.0-blue.svg)
+![Version](https://img.shields.io/badge/version-0.2.0-blue.svg)
 ![License](https://img.shields.io/badge/license-MIT-green.svg)
 ![Vue](https://img.shields.io/badge/Vue-3.5-42b883.svg)
 ![TypeScript](https://img.shields.io/badge/TypeScript-5.6-3178c6.svg)
