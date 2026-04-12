@@ -1,6 +1,4 @@
-# 🎲 Creador de Personajes D&D
-
-<div align="center">
+# Creador de Personajes D&D 🎲
 
 ![Version](https://img.shields.io/badge/version-1.0.0-blue.svg)
 ![License](https://img.shields.io/badge/license-MIT-green.svg)
@@ -11,27 +9,23 @@ Una aplicación web moderna para crear personajes de Dungeons & Dragons 5ª Edic
 
 *A modern web application to create Dungeons & Dragons 5th Edition characters. Designed especially for the Spanish-speaking community and beginner players.*
 
-[🚀 Demo](#) · [📖 Documentación](#tabla-de-contenidos) · [🐛 Reportar Bug](https://github.com/tu-usuario/repo/issues)
+---
 
-</div>
+## Tabla de Contenidos
+
+- [Características](#caracteristicas)
+- [Descripción](#descripcion)
+- [Instalación](#instalacion)
+- [Uso](#uso)
+- [Estructura del proyecto](#estructura-del-proyecto)
+- [Comandos útiles](#comandos-utiles)
+- [Dependencias principales](#dependencias-principales)
+- [Créditos](#creditos)
+- [Licencia](#licencia)
 
 ---
 
-## 📋 Tabla de Contenidos
-
-- [✨ Características](#-características)
-- [🎯 Descripción](#-descripción)
-- [🚀 Instalación](#-instalación)
-- [💻 Uso](#-uso)
-- [📁 Estructura del Proyecto](#-estructura-del-proyecto)
-- [🛠️ Comandos Útiles](#️-comandos-útiles)
-- [📦 Dependencias Principales](#-dependencias-principales)
-- [🎨 Créditos](#-créditos)
-- [📄 Licencia](#-licencia)
-
----
-
-## ✨ Características
+## Caracteristicas
 
 ### 🎮 Creación de Personajes Paso a Paso
 - **Formulario intuitivo** con sistema de pestañas (Stepper)
@@ -67,7 +61,7 @@ Una aplicación web moderna para crear personajes de Dungeons & Dragons 5ª Edic
 
 ---
 
-## 🎯 Descripción
+## Descripcion
 
 Esta aplicación web permite crear personajes de Dungeons & Dragons 5ª Edición de forma **rápida, sencilla e intuitiva**. 
 
@@ -86,7 +80,7 @@ Esta aplicación web permite crear personajes de Dungeons & Dragons 5ª Edición
 
 ---
 
-## 🚀 Instalación
+## Instalacion
 
 ### Prerrequisitos
 - Node.js 18+ 
@@ -122,7 +116,7 @@ Esta aplicación web permite crear personajes de Dungeons & Dragons 5ª Edición
 
 ---
 
-## 💻 Uso
+## Uso
 
 ### Modo Desarrollo
 ```bash
@@ -153,7 +147,7 @@ npm run format
 
 ---
 
-## 📁 Estructura del Proyecto
+## Estructura del proyecto
 
 ```
 dnd_spanish_character_creator_app/
@@ -222,21 +216,19 @@ dnd_spanish_character_creator_app/
 
 ---
 
-## 🛠️ Comandos Útiles
+## Comandos utiles
 
-| Comando | Descripción |
-|---------|-------------|
-| `npm run dev` | Inicia servidor de desarrollo |
-| `npm run build` | Compila para producción |
-| `npm run preview` | Previsualiza build de producción |
-| `npm run lint` | Ejecuta ESLint |
-| `npm run format` | Formatea código con Prettier |
-| `npm run type-check` | Verifica tipos de TypeScript |
-| `npm ci` | Instalación limpia de dependencias |
+- `npm run dev`: Inicia servidor de desarrollo
+- `npm run build`: Compila para producción
+- `npm run preview`: Previsualiza build de producción
+- `npm run lint`: Ejecuta ESLint
+- `npm run format`: Formatea código con Prettier
+- `npm run type-check`: Verifica tipos de TypeScript
+- `npm ci`: Instalación limpia de dependencias
 
 ---
 
-## 📦 Dependencias Principales
+## Dependencias principales
 
 ### Core
 - **[Vue 3.5](https://vuejs.org/)** - Framework JavaScript progresivo
@@ -264,7 +256,7 @@ dnd_spanish_character_creator_app/
 
 ---
 
-## 🎨 Créditos
+## Creditos
 
 ### 👨‍💻 Desarrollo
 **Ignacio Raúl Bonilla Jiménez**  
@@ -287,7 +279,7 @@ Responsable del diseño del sistema cromático y la identidad visual de la aplic
 
 ---
 
-## 📄 Licencia
+## Licencia
 
 Este proyecto está bajo la licencia **MIT**.
 
@@ -326,12 +318,8 @@ SOFTWARE.
 
 ---
 
-<div align="center">
-
 **¡Gracias por usar el Creador de Personajes D&D!** 🎲
 
 Hecho con ❤️ para la comunidad de D&D
 
-[⬆ Volver arriba](#-creador-de-personajes-dd)
-
-</div>
+[⬆ Volver arriba](#tabla-de-contenidos)

@@ -118,7 +118,7 @@ Stats: {...}
 ...
 ```
 
-2. **Durante la generación**, debe aparecer:
+1. **Durante la generación**, debe aparecer:
 ```
 📄 Generación de PDF
 Datos a rellenar: {...}
@@ -133,7 +133,7 @@ PDF cargado. Total de campos: [número]
   ⚠️ Campos no encontrados: [número]
 ```
 
-3. **Si hay errores**, la consola mostrará:
+1. **Si hay errores**, la consola mostrará:
 ```
 ⚠️ Campo "[nombre]" no encontrado o error al rellenar.
 ```
