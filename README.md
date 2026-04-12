@@ -83,8 +83,8 @@ Esta aplicación web permite crear personajes de Dungeons & Dragons 5ª Edición
 ## Instalacion
 
 ### Prerrequisitos
-- Node.js 18+ 
-- npm 9+ o superior
+- Node.js 20.19.0 o >= 22.12.0
+- npm 10+ recomendado
 
 ### Pasos de instalación
 
@@ -207,8 +207,7 @@ dnd_spanish_character_creator_app/
 │   ├── App.vue                         # Componente raíz
 │   └── main.ts                         # Punto de entrada
 │
-├── .eslintrc.config.ts                 # Configuración ESLint
-├── tailwind.config.js                  # Configuración Tailwind
+├── eslint.config.ts                    # Configuración ESLint (flat config)
 ├── tsconfig.json                       # Configuración TypeScript
 ├── vite.config.ts                      # Configuración Vite
 └── package.json                        # Dependencias del proyecto
@@ -232,17 +231,17 @@ dnd_spanish_character_creator_app/
 
 ### Core
 - **[Vue 3.5](https://vuejs.org/)** - Framework JavaScript progresivo
-- **[TypeScript 5.6](https://www.typescriptlang.org/)** - Superset tipado de JavaScript
-- **[Vite 6.0](https://vitejs.dev/)** - Build tool ultrarrápido
+- **[TypeScript 6.0](https://www.typescriptlang.org/)** - Superset tipado de JavaScript
+- **[Vite 8.0](https://vitejs.dev/)** - Build tool ultrarrápido
 
 ### UI & Estilo
-- **[PrimeVue 4.2](https://www.primefaces.org/primevue/)** - Biblioteca de componentes UI
-- **[Tailwind CSS 4.0](https://tailwindcss.com/)** - Framework CSS utility-first
+- **[PrimeVue 4.5](https://www.primefaces.org/primevue/)** - Biblioteca de componentes UI
+- **[Tailwind CSS 4.2](https://tailwindcss.com/)** - Framework CSS utility-first
 - **[PrimeIcons](https://primevue.org/icons/)** - Biblioteca de iconos
 
 ### Estado y Routing
 - **[Pinia](https://pinia.vuejs.org/)** - Store oficial de Vue
-- **[Vue Router](https://router.vuejs.org/)** - Router oficial de Vue
+- **[Vue Router 5](https://router.vuejs.org/)** - Router oficial de Vue
 
 ### Funcionalidades Especiales
 - **[@3d-dice/dice-box](https://github.com/3d-dice/dice-box)** - Motor de física 3D para dados
