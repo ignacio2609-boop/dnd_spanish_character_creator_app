@@ -6,7 +6,7 @@ import StepPanel from 'primevue/steppanel';
 import Button from 'primevue/button';
 import InputText from 'primevue/inputtext';
 import InputNumber from 'primevue/inputnumber';
-import Dropdown from 'primevue/dropdown';
+import Select from 'primevue/select';
 import Checkbox from 'primevue/checkbox';
 import { RainbowButton } from '@/components/inspira_ui';
 import { useCharacterStore, ALL_SKILLS, type SkillKey, type StatKey } from '@/stores/characterStore.ts';
@@ -237,7 +237,7 @@ defineEmits(['useRollDice']);
                   >
                     Clase
                   </label>
-                  <Dropdown
+                  <Select
                     id="character-class"
                     v-model="characterStore.concept.class"
                     :options="CHARACTER_CLASSES"
@@ -270,7 +270,7 @@ defineEmits(['useRollDice']);
                         </span>
                       </div>
                     </template>
-                  </Dropdown>
+                  </Select>
                 </div>
 
                 <div class="flex flex-col gap-2">
@@ -320,7 +320,7 @@ defineEmits(['useRollDice']);
                 >
                   Raza
                 </label>
-                <Dropdown
+                <Select
                   id="character-race"
                   v-model="characterStore.background.race"
                   :options="raceOptions"
@@ -339,7 +339,7 @@ defineEmits(['useRollDice']);
                 >
                   Trasfondo (Background)
                 </label>
-                <Dropdown
+                <Select
                   id="character-background"
                   v-model="characterStore.background.backgroundName"
                   :options="backgroundOptions"
@@ -358,7 +358,7 @@ defineEmits(['useRollDice']);
                 >
                   Alineamiento
                 </label>
-                <Dropdown
+                <Select
                   id="character-alignment"
                   v-model="characterStore.background.alignment"
                   :options="alignmentOptions"
