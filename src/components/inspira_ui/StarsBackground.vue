@@ -8,9 +8,9 @@
     "
     @mousemove="handleMouseMove"
   >
-    <motion.div :style="{ x: springX, y: springY }">
+    <MotionDiv :style="{ x: springX, y: springY }">
       <!-- Star Layer 1 -->
-      <motion.div
+      <MotionDiv
         class="absolute top-0 left-0 w-full h-[2000px]"
         :animate="{ y: [0, -2000] }"
         :transition="starLayer1Transition"
@@ -31,10 +31,10 @@
             boxShadow: boxShadow1,
           }"
         />
-      </motion.div>
+      </MotionDiv>
 
       <!-- Star Layer 2 -->
-      <motion.div
+      <MotionDiv
         class="absolute top-0 left-0 w-full h-[2000px]"
         :animate="{ y: [0, -2000] }"
         :transition="starLayer2Transition"
@@ -55,10 +55,10 @@
             boxShadow: boxShadow2,
           }"
         />
-      </motion.div>
+      </MotionDiv>
 
       <!-- Star Layer 3 -->
-      <motion.div
+      <MotionDiv
         class="absolute top-0 left-0 w-full h-[2000px]"
         :animate="{ y: [0, -2000] }"
         :transition="starLayer3Transition"
@@ -79,8 +79,8 @@
             boxShadow: boxShadow3,
           }"
         />
-      </motion.div>
-    </motion.div>
+      </MotionDiv>
+    </MotionDiv>
 
     <!-- Slot for child content -->
     <slot />
@@ -108,6 +108,8 @@ const props = withDefaults(defineProps<StarsBackgroundProps>(), {
   starColor: '#fff',
   class: '',
 });
+
+const MotionDiv = motion.div;
 
 // For slot content
 defineSlots();
