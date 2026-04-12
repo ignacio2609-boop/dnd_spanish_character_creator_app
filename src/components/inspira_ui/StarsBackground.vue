@@ -106,6 +106,7 @@ const props = withDefaults(defineProps<StarsBackgroundProps>(), {
   speed: 50,
   transition: () => ({ stiffness: 50, damping: 20 }),
   starColor: '#fff',
+  class: '',
 });
 
 // For slot content

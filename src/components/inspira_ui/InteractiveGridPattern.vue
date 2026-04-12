@@ -31,6 +31,8 @@ interface InteractiveGridPatternProps {
 }
 
 const props = withDefaults(defineProps<InteractiveGridPatternProps>(), {
+  className: '',
+  squaresClassName: '',
   width: 40,
   height: 40,
   squares: () => [24, 24],
