@@ -16,7 +16,25 @@ export default defineConfig({
     // vueDevTools(), // Desactivado para no mostrar las DevTools
     tailwindcss(),
     viteStaticCopy({
-      targets: [{ src: 'node_modules/@3d-dice/dice-box/dist/assets/**/*', dest: 'assets/dice-box' }],
+      // DiceBox resuelve archivos relativos a `assetPath: '/assets/dice-box/'`.
+      // Por eso necesitamos publicar exactamente:
+      // - /assets/dice-box/ammo/ammo.wasm.wasm
+      // - /assets/dice-box/themes/default/*
+      targets: [
+        {
+          // Mantiene la ruta final esperada por Ammo.js
+          src: 'node_modules/@3d-dice/dice-box/dist/assets/ammo/**/*',
+          dest: 'assets/dice-box/ammo',
+          // Evita anidar `node_modules/...` en la salida
+          rename: { stripBase: true },
+        },
+        {
+          // El tema por defecto debe vivir bajo `themes/default`
+          src: 'node_modules/@3d-dice/dice-box/dist/assets/themes/default/**/*',
+          dest: 'assets/dice-box/themes/default',
+          rename: { stripBase: true },
+        },
+      ],
     }),
     Components({
       resolvers: [PrimeVueResolver(), MotionResolver()],
