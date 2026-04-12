@@ -40,6 +40,39 @@ export default defineConfig({
       resolvers: [PrimeVueResolver(), MotionResolver()],
     }),
   ],
+  build: {
+    // DiceBox incluye binarios JS muy pesados (world.offscreen/Dice).
+    // Los separamos en chunk propio y elevamos el warning para evitar ruido.
+    chunkSizeWarningLimit: 1600,
+    rolldownOptions: {
+      output: {
+        manualChunks(id) {
+          if (id.includes('@3d-dice/dice-box/dist/world.offscreen')) {
+            return 'dice-world-offscreen';
+          }
+          if (id.includes('@3d-dice/dice-box/dist/world.onscreen')) {
+            return 'dice-world-onscreen';
+          }
+          if (id.includes('@3d-dice/dice-box/dist/Dice')) {
+            return 'dice-engine';
+          }
+          if (id.includes('@3d-dice/dice-box') || id.includes('@3d-dice/dice-ui')) {
+            return 'dice-core';
+          }
+          if (id.includes('primevue') || id.includes('@primeuix')) {
+            return 'primevue';
+          }
+          if (id.includes('vue-router')) {
+            return 'router';
+          }
+          if (id.includes('node_modules')) {
+            return 'vendor';
+          }
+          return undefined;
+        },
+      },
+    },
+  },
   resolve: {
     alias: {
       '@': fileURLToPath(new URL('./src', import.meta.url)),
